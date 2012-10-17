@@ -179,10 +179,43 @@
         int next;
     } dir_procs;
     
+    // Base de Direcciones de Memoria Virtuales
+    int GCAR = 0, GTEXTO = 1000, GINT = 2000, GFLOAT = 3000, GBOOL = 4000, LCAR = 5000, LTEXTO = 6000, LINT = 7000, LFLOAT = 8000, LBOOL = 9000, TCAR = 10000, TTEXTO = 11000, TINT = 12000, TFLOAT = 13000, TBOOL = 14000, CTCAR = 15000, CTTEXTO = 16000, CTINT = 17000, CTFLOAT = 18000, CTBOOL = 19000;
+    
+    // Offsets de Direcciones de Memoria
+    int global_car_offset = 0, global_text_offset = 0, global_int_offset = 0, global_float_offset = 0, global_bool_offset = 0, local_car_offset = 0, local_text_offset = 0, local_int_offset = 0, local_float_offset = 0, local_bool_offset = 0, temp_car_offset = 0, temp_text_offset = 0, temp_int_offset = 0, temp_float_offset = 0, temp_bool_offset = 0, const_car_offset = 0, const_text_offset = 0, const_int_offset = 0, const_float_offset = 0, const_bool_offset = 0;
+
+    // Declaracion Variables
     char *variable_type; // Tipo de la ultima variable conocida
     char *variable_name; // Nombre de la ultima variable conocida
+    char *last_func; //
+    char *tipo_func;
     Node *dirProcsInit; // Crea el apuntador al primer pointer del dir procs
     SemanticCubeNode *semanticCube;; // Apuntador al primer nodo del cubo semantico
+    
+    int alloc_virtual_address(char *returnType, char *scope) {
+        if (strcmp(scope,(char *)"global") == 0) {
+            if (strcmp(returnType,(char *)"caracter") == 0) {
+                global_car_offset++;
+                return GCAR+global_car_offset-1;
+            } else if (strcmp(returnType,(char *)"texto") == 0) {
+                global_text_offset++;
+                return GTEXTO+global_text_offset-1;
+            } else if (strcmp(returnType,(char *)"numero") == 0) {
+                global_int_offset++;
+                return GINT+global_int_offset-1;
+            } else if (strcmp(returnType,(char *)"decimal") == 0) {
+                global_float_offset++;
+                return GFLOAT+global_float_offset-1;
+            } else if (strcmp(returnType,(char *)"booleano") == 0) {
+                global_bool_offset++;
+                return GBOOL+global_bool_offset-1;
+            } else return -1;
+        } else if (strcmp(scope,(char *)"local") == 0) {
+        } else if (strcmp(scope,(char *)"temporal") == 0) {
+        } else if (strcmp(scope,(char *)"constante") == 0) {
+        } else return -1;
+    }
 
 
 /* Enabling traces.  */
@@ -205,12 +238,12 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 38 "sintaxis.y"
+#line 71 "sintaxis.y"
 {
     char *str;
 }
 /* Line 193 of yacc.c.  */
-#line 214 "sintaxis.tab.c"
+#line 247 "sintaxis.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -223,7 +256,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 227 "sintaxis.tab.c"
+#line 260 "sintaxis.tab.c"
 
 #ifdef short
 # undef short
@@ -538,15 +571,15 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    47,    47,    47,    47,    47,    48,    49,    50,    51,
-      53,    53,    54,    55,    57,    57,    57,    57,    57,    64,
-      65,    66,    68,    68,    68,    68,    68,    68,    70,    72,
-      73,    74,    76,    77,    78,    79,    81,    83,    85,    87,
-      89,    90,    91,    92,    93,    95,    96,    97,    98,    98,
-      98,    98,   100,   101,   102,   103,   105,   106,   107,   108,
-     110,   111,   112,   113,   115,   116,   117,   117,   118,   120,
-     120,   120,   120,   120,   120,   121,   123,   124,   125,   126,
-     127,   128,   129
+       0,    80,    80,    80,    80,    80,    81,    82,    83,    84,
+      86,    86,    87,    88,    90,    90,    90,    90,    90,    97,
+      98,    99,   101,   101,   101,   101,   101,   101,   103,   105,
+     106,   107,   109,   110,   111,   112,   114,   116,   118,   120,
+     122,   123,   124,   125,   126,   128,   129,   130,   131,   131,
+     131,   131,   133,   134,   135,   136,   138,   139,   140,   141,
+     143,   144,   145,   146,   148,   149,   150,   150,   151,   153,
+     153,   153,   153,   153,   153,   154,   156,   157,   158,   159,
+     160,   161,   162
 };
 #endif
 
@@ -1550,58 +1583,58 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 47 "sintaxis.y"
-    { variable_type = (char *)"NP"; ;}
+#line 80 "sintaxis.y"
+    { variable_type = (char *)"NP"; tipo_func = (char *)"global" ;}
     break;
 
   case 3:
-#line 47 "sintaxis.y"
-    { variable_name = yylval.str; ;}
+#line 80 "sintaxis.y"
+    { variable_name = yylval.str; last_func = variable_name; ;}
     break;
 
   case 4:
-#line 47 "sintaxis.y"
+#line 80 "sintaxis.y"
     { addProc(&dirProcsInit,variable_name,variable_type); ;}
     break;
 
   case 10:
-#line 53 "sintaxis.y"
+#line 86 "sintaxis.y"
     { variable_name = yylval.str; ;}
     break;
 
   case 11:
-#line 53 "sintaxis.y"
-    { addProc(&dirProcsInit,variable_name,variable_type); ;}
+#line 86 "sintaxis.y"
+    { addLocalVariableToProc(&dirProcsInit,last_func,variable_name,variable_type,alloc_virtual_address(variable_type, tipo_func)); ;}
     break;
 
   case 14:
-#line 57 "sintaxis.y"
+#line 90 "sintaxis.y"
     { variable_type = (char *)"numero"; ;}
     break;
 
   case 15:
-#line 57 "sintaxis.y"
+#line 90 "sintaxis.y"
     { variable_type = (char *)"decimal"; ;}
     break;
 
   case 16:
-#line 57 "sintaxis.y"
+#line 90 "sintaxis.y"
     { variable_type = (char *)"caracter"; ;}
     break;
 
   case 17:
-#line 57 "sintaxis.y"
+#line 90 "sintaxis.y"
     { variable_type = (char *)"texto"; ;}
     break;
 
   case 18:
-#line 57 "sintaxis.y"
+#line 90 "sintaxis.y"
     { variable_type = (char *)"booleano"; ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1605 "sintaxis.tab.c"
+#line 1638 "sintaxis.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1815,7 +1848,7 @@ yyreturn:
 }
 
 
-#line 131 "sintaxis.y"
+#line 164 "sintaxis.y"
 
 
 void yyerror(const char *s)  /* Llamada por yyparse ante un error */
@@ -1839,7 +1872,7 @@ main(int argc, char* argv[]) {
             yyparse();
         } while (!feof(yyin));
         
-        //debugSemanticCube(semanticCube);
+        debugList(dirProcsInit);
 
         deallocSemanticCube(&semanticCube);
         deallocProcDir(&dirProcsInit);

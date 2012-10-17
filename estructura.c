@@ -250,6 +250,7 @@ void initSemanticCube(SemanticCubeNode **list) {
 typedef struct _node {
     char* name;
     char* returnType;
+    int virtual_address;
     _node *local_variables;
     _node *next;
 } Node;
@@ -320,13 +321,14 @@ Node* findLocalVariableInProc(Node *list, char* proc_name, char* var_name) {
 //
 // Agrega una variable local a un Proc especifico en una lista
 //
-void addLocalVariableToProc(Node **list, char* proc_name, char* var_name, char* returnType) {
+void addLocalVariableToProc(Node **list, char* proc_name, char* var_name, char* returnType, int virtual_address) {
     Node *procNode = findProc(*list, proc_name);
     Node *tNode = (struct _node *)malloc(sizeof(struct _node));
     
     tNode->name = var_name;
     tNode->returnType = returnType;
     tNode->local_variables = NULL;
+    tNode->virtual_address = virtual_address;
     tNode->next = procNode->local_variables;
     
     procNode->local_variables = tNode;
@@ -362,15 +364,21 @@ void debugList(Node *list) {
     Node *local_variables;
  
     while (tNode != NULL) {
-        printf("nombre: %s, tipo: %s\n", tNode->name, tNode->returnType);
+        printf("nombre: %s, tipo: %s, VIRT_ADDRESS: %d\n", tNode->name, tNode->returnType, tNode->virtual_address);
         
         // Lista las variables locales en la lista
         local_variables = tNode->local_variables;
         while(local_variables != NULL) {
-            printf("\tLocal Var: %s\n", local_variables->name);
+            printf("\tLocal Var: %s, VIRT_ADDRESS: %d\n", local_variables->name, local_variables->virtual_address);
             local_variables = local_variables->next;
         }
         
         tNode = tNode->next;
     }
 }
+
+/******** STACKS *********/
+
+typedef struct stack {
+    
+} stack;

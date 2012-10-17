@@ -1,5 +1,6 @@
 programa viko;
-    var texto nombre;
+    var numero nombre;
+    var numero a;
 realiza
     lee(nombre);
     imprime("algo",nombre); 

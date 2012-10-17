@@ -29,10 +29,43 @@ Programa BISON para el Manejo de Sintaxis
         int next;
     } dir_procs;
     
+    // Base de Direcciones de Memoria Virtuales
+    int GCAR = 0, GTEXTO = 1000, GINT = 2000, GFLOAT = 3000, GBOOL = 4000, LCAR = 5000, LTEXTO = 6000, LINT = 7000, LFLOAT = 8000, LBOOL = 9000, TCAR = 10000, TTEXTO = 11000, TINT = 12000, TFLOAT = 13000, TBOOL = 14000, CTCAR = 15000, CTTEXTO = 16000, CTINT = 17000, CTFLOAT = 18000, CTBOOL = 19000;
+    
+    // Offsets de Direcciones de Memoria
+    int global_car_offset = 0, global_text_offset = 0, global_int_offset = 0, global_float_offset = 0, global_bool_offset = 0, local_car_offset = 0, local_text_offset = 0, local_int_offset = 0, local_float_offset = 0, local_bool_offset = 0, temp_car_offset = 0, temp_text_offset = 0, temp_int_offset = 0, temp_float_offset = 0, temp_bool_offset = 0, const_car_offset = 0, const_text_offset = 0, const_int_offset = 0, const_float_offset = 0, const_bool_offset = 0;
+
+    // Declaracion Variables
     char *variable_type; // Tipo de la ultima variable conocida
     char *variable_name; // Nombre de la ultima variable conocida
+    char *last_func; //
+    char *tipo_func;
     Node *dirProcsInit; // Crea el apuntador al primer pointer del dir procs
     SemanticCubeNode *semanticCube;; // Apuntador al primer nodo del cubo semantico
+    
+    int alloc_virtual_address(char *returnType, char *scope) {
+        if (strcmp(scope,(char *)"global") == 0) {
+            if (strcmp(returnType,(char *)"caracter") == 0) {
+                global_car_offset++;
+                return GCAR+global_car_offset-1;
+            } else if (strcmp(returnType,(char *)"texto") == 0) {
+                global_text_offset++;
+                return GTEXTO+global_text_offset-1;
+            } else if (strcmp(returnType,(char *)"numero") == 0) {
+                global_int_offset++;
+                return GINT+global_int_offset-1;
+            } else if (strcmp(returnType,(char *)"decimal") == 0) {
+                global_float_offset++;
+                return GFLOAT+global_float_offset-1;
+            } else if (strcmp(returnType,(char *)"booleano") == 0) {
+                global_bool_offset++;
+                return GBOOL+global_bool_offset-1;
+            } else return -1;
+        } else if (strcmp(scope,(char *)"local") == 0) {
+        } else if (strcmp(scope,(char *)"temporal") == 0) {
+        } else if (strcmp(scope,(char *)"constante") == 0) {
+        } else return -1;
+    }
 %}
 
 %union {
@@ -44,13 +77,13 @@ Programa BISON para el Manejo de Sintaxis
 
 %%
 
-program: PROGRAMA { variable_type = (char *)"NP"; } ID { variable_name = yylval.str; } PCOMA { addProc(&dirProcsInit,variable_name,variable_type); } program1 bloque program2;
+program: PROGRAMA { variable_type = (char *)"NP"; tipo_func = (char *)"global" } ID { variable_name = yylval.str; last_func = variable_name; } PCOMA { addProc(&dirProcsInit,variable_name,variable_type); } program1 bloque program2;
 program1: vars program1;
 program1: ;
 program2: func program2;
 program2: ;
 
-vars: VAR tipo vars1 ID { variable_name = yylval.str; } PCOMA { addProc(&dirProcsInit,variable_name,variable_type); } ;
+vars: VAR tipo vars1 ID { variable_name = yylval.str; } PCOMA { addLocalVariableToProc(&dirProcsInit,last_func,variable_name,variable_type,alloc_virtual_address(variable_type, tipo_func)); } ;
 vars1: ABRECORCH CTENUM CIERRACORCH;
 vars1: ;
 
@@ -151,7 +184,7 @@ main(int argc, char* argv[]) {
             yyparse();
         } while (!feof(yyin));
         
-        //debugSemanticCube(semanticCube);
+        debugList(dirProcsInit);
 
         deallocSemanticCube(&semanticCube);
         deallocProcDir(&dirProcsInit);

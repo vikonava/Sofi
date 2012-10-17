@@ -128,7 +128,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 38 "sintaxis.y"
+#line 71 "sintaxis.y"
 {
     char *str;
 }
