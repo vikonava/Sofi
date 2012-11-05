@@ -1,7 +1,7 @@
 programa viko;
-    var numero nombre;
+    var booleano c;
+    var numero b;
     var numero a;
 realiza
-    lee(nombre);
-    imprime("algo",nombre); 
+  c = a mayor b;
 fin
