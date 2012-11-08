@@ -104,10 +104,10 @@ char* findSemanticCubeReturnType(SemanticCubeNode *list, char* op1, char* op2, c
     SemanticCubeNode *sNode = list;
     
     while (sNode != NULL) {
-        if (sNode->data == op1) {
+        if (strcmp(sNode->data,op1) == 0) {
             sNode = sNode->contents;
             while (sNode != NULL) {
-                if (sNode->data == op2) {
+                if (strcmp(sNode->data,op2) == 0) {
                     sNode = sNode->contents;
                     while (sNode != NULL) {
                         if (sNode->data == operation) return sNode->contents->data;
@@ -189,60 +189,60 @@ void deallocSemanticCube(SemanticCubeNode **list) {
 void initSemanticCube(SemanticCubeNode **list) {
     addOperNode(list,(char *)"numero");
     addSecondOperNode(list, (char *)"numero", (char *)"numero");
-    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"+", (char *)"numero");
-    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"-", (char *)"numero");
-    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"*", (char *)"numero");
-    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"/", (char *)"decimal");
-    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"%", (char *)"numero");
-    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"MAYOR", (char *)"booleano");
-    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"MENOR", (char *)"booleano");
-    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"IGUAL", (char *)"booleano");
-    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"DIFERENTE", (char *)"booleano");
+    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"10", (char *)"numero");
+    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"20", (char *)"numero");
+    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"30", (char *)"numero");
+    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"40", (char *)"decimal");
+    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"50", (char *)"numero");
+    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"80", (char *)"booleano");
+    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"90", (char *)"booleano");
+    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"110", (char *)"booleano");
+    addOperationNode(list, (char *)"numero", (char *)"numero", (char *)"100", (char *)"booleano");
     addSecondOperNode(list, (char *)"numero", (char *)"decimal");
-    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"+", (char *)"decimal");
-    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"-", (char *)"decimal");
-    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"*", (char *)"decimal");
-    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"/", (char *)"decimal");
-    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"%", (char *)"numero");
-    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"MAYOR", (char *)"booleano");
-    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"MENOR", (char *)"booleano");
+    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"10", (char *)"decimal");
+    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"20", (char *)"decimal");
+    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"30", (char *)"decimal");
+    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"40", (char *)"decimal");
+    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"50", (char *)"numero");
+    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"80", (char *)"booleano");
+    addOperationNode(list, (char *)"numero", (char *)"decimal", (char *)"90", (char *)"booleano");
     
     addOperNode(list,(char *)"decimal");
     addSecondOperNode(list, (char *)"decimal", (char *)"numero");
-    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"+", (char *)"decimal");
-    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"-", (char *)"decimal");
-    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"*", (char *)"decimal");
-    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"/", (char *)"decimal");
-    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"%", (char *)"numero");
-    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"MAYOR", (char *)"booleano");
-    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"MENOR", (char *)"booleano");
+    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"10", (char *)"decimal");
+    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"20", (char *)"decimal");
+    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"30", (char *)"decimal");
+    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"40", (char *)"decimal");
+    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"50", (char *)"numero");
+    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"80", (char *)"booleano");
+    addOperationNode(list, (char *)"decimal", (char *)"numero", (char *)"90", (char *)"booleano");
     addSecondOperNode(list, (char *)"decimal", (char *)"decimal");
-    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"+", (char *)"decimal");
-    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"-", (char *)"decimal");
-    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"*", (char *)"decimal");
-    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"/", (char *)"decimal");
-    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"%", (char *)"numero");
-    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"MAYOR", (char *)"booleano");
-    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"MENOR", (char *)"booleano");
-    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"IGUAL", (char *)"booleano");
-    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"DIFERENTE", (char *)"booleano");
+    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"10", (char *)"decimal");
+    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"20", (char *)"decimal");
+    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"30", (char *)"decimal");
+    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"40", (char *)"decimal");
+    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"50", (char *)"numero");
+    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"80", (char *)"booleano");
+    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"90", (char *)"booleano");
+    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"110", (char *)"booleano");
+    addOperationNode(list, (char *)"decimal", (char *)"decimal", (char *)"100", (char *)"booleano");
     
     addOperNode(list,(char *)"texto");
     addSecondOperNode(list, (char *)"texto", (char *)"texto");
-    addOperationNode(list, (char *)"texto", (char *)"texto", (char *)"IGUAL", (char *)"booleano");
-    addOperationNode(list, (char *)"texto", (char *)"texto", (char *)"DIFERENTE", (char *)"booleano");
+    addOperationNode(list, (char *)"texto", (char *)"texto", (char *)"110", (char *)"booleano");
+    addOperationNode(list, (char *)"texto", (char *)"texto", (char *)"100", (char *)"booleano");
     
     addOperNode(list,(char *)"caracter");
     addSecondOperNode(list, (char *)"caracter", (char *)"caracter");
-    addOperationNode(list, (char *)"caracter", (char *)"caracter", (char *)"IGUAL", (char *)"booleano");
-    addOperationNode(list, (char *)"caracter", (char *)"caracter", (char *)"DIFERENTE", (char *)"booleano");
+    addOperationNode(list, (char *)"caracter", (char *)"caracter", (char *)"110", (char *)"booleano");
+    addOperationNode(list, (char *)"caracter", (char *)"caracter", (char *)"100", (char *)"booleano");
     
     addOperNode(list,(char *)"booleano");
     addSecondOperNode(list, (char *)"booleano", (char *)"booleano");
-    addOperationNode(list, (char *)"booleano", (char *)"booleano", (char *)"IGUAL", (char *)"booleano");
-    addOperationNode(list, (char *)"booleano", (char *)"booleano", (char *)"DIFERENTE", (char *)"booleano");
-    addOperationNode(list, (char *)"booleano", (char *)"booleano", (char *)"Y", (char *)"booleano");
-    addOperationNode(list, (char *)"booleano", (char *)"booleano", (char *)"O", (char *)"booleano");
+    addOperationNode(list, (char *)"booleano", (char *)"booleano", (char *)"110", (char *)"booleano");
+    addOperationNode(list, (char *)"booleano", (char *)"booleano", (char *)"100", (char *)"booleano");
+    addOperationNode(list, (char *)"booleano", (char *)"booleano", (char *)"60", (char *)"booleano");
+    addOperationNode(list, (char *)"booleano", (char *)"booleano", (char *)"70", (char *)"booleano");
 }
 
 /****************** Dir Procs **********************/
@@ -301,15 +301,7 @@ Node* findLocalVariableInProc(Node *list, char* proc_name, char* var_name) {
     tNode = tNode->local_variables;
     
     while (tNode != NULL) {
-        if (tNode->name == var_name) return tNode;
-        tNode = tNode->next;
-    }
-    
-    // Busca en las variables globales
-    tNode = list;
-    
-    while (tNode != NULL) {
-        if (tNode->name == var_name && tNode->local_variables == NULL) return tNode;
+        if (strcmp(tNode->name,var_name) == 0) return tNode;
         tNode = tNode->next;
     }
     
@@ -376,9 +368,3 @@ void debugList(Node *list) {
         tNode = tNode->next;
     }
 }
-
-/******** STACKS *********/
-
-typedef struct stack {
-    
-} stack;

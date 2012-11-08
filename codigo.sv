@@ -1,7 +1,11 @@
 programa viko;
-    var numero nombre;
+    var numero i;
+    var numero b;
     var numero a;
 realiza
-    lee(nombre);
-    imprime("algo",nombre); 
+
+  para (i = 0; i mayor 8; i = i + 1;) realiza
+    b = a + b;
+  fin
+
 fin
