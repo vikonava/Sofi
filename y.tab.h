@@ -128,7 +128,11 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
+<<<<<<< HEAD
 #line 316 "sintaxis.y"
+=======
+#line 249 "sintaxis.y"
+>>>>>>> 6c214a538056acf5023d229c48aa6730c2a43c4a
 {
     char *str;
 }

@@ -52,6 +52,7 @@ Programa BISON para el Manejo de Sintaxis
     char *last_func; //
     char *tipo_func;
 	int contadorCuad = 0;
+
 	
 	Cuadruplos *cuadruplo;
     Node *dirProcsInit; // Crea el apuntador al primer pointer del dir procs
@@ -191,31 +192,31 @@ Programa BISON para el Manejo de Sintaxis
 		operadorInt = atoi(operador);
 
 		tipo1 = static_cast<char*>(PiladeTipos->ptr);
-        if (PiladeTipos->next != NULL) {
-            tipo2 = static_cast<char*>(PiladeTipos->next->ptr);
+      		if (PiladeTipos->next != NULL) {
+            		tipo2 = static_cast<char*>(PiladeTipos->next->ptr);
         
-            tipoRetorno = findSemanticCubeReturnType(semanticCube, tipo1, tipo2, operador);
+            		tipoRetorno = findSemanticCubeReturnType(semanticCube, tipo1, tipo2, operador);
 		
 		
-            if (PilaOperadores != NULL){
-                if (strcmp(operador, static_cast<char*>(PilaOperadores->ptr)) == 0){
-                    if( strcmp(tipoRetorno,"error") != 0) {
-                        stack_pop(&PiladeTipos);
-                        stack_pop(&PiladeTipos);
-                        operando2 = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
-                        operando1 = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
-                        stack_pop(&PilaOperadores);
-                        *direccionTemporal = alloc_virtual_address(tipoRetorno, (char *) "temporal");
-                        addCuad(&cuadruplo, operadorInt, operando1, operando2, *direccionTemporal);
+           	 	if (PilaOperadores != NULL){
+                		if (strcmp(operador, static_cast<char*>(PilaOperadores->ptr)) == 0){
+                    			if( strcmp(tipoRetorno,"error") != 0) {
+                        			stack_pop(&PiladeTipos);
+                        			stack_pop(&PiladeTipos);
+                        			operando2 = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
+                        			operando1 = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
+                        			stack_pop(&PilaOperadores);
+                        			*direccionTemporal = alloc_virtual_address(tipoRetorno, (char *) "temporal");
+                       			addCuad(&cuadruplo, operadorInt, operando1, operando2, *direccionTemporal);
 						contadorCuad++;
-                        stack_push(&PilaOperandos, direccionTemporal, 2);
-                        stack_push(&PiladeTipos, (void *)findSemanticCubeReturnType(semanticCube, tipo1, tipo2, operador), 1);
-                    } else{
-                        printf("Error Semantico: Tipos incopatibles %s,%s\n",tipo1,tipo2);
-                    }
-                }
-            }
-        }
+                        			stack_push(&PilaOperandos, direccionTemporal, 2);
+                        			stack_push(&PiladeTipos, (void *)findSemanticCubeReturnType(semanticCube, tipo1, tipo2, operador), 1);
+                    			} else{
+                        			printf("Error Semantico: Tipos incopatibles %s,%s\n",tipo1,tipo2);
+                    			}
+                		}
+            		}
+        	}
 	}
 	
 	void funcionAsignacion(){
@@ -234,7 +235,6 @@ Programa BISON para el Manejo de Sintaxis
 				stack_pop(&PiladeTipos);
 				operando12 = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
 				operando11 = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
-				
 				addCuad(&cuadruplo, 120, operando12, -1, operando11);
 				contadorCuad++;
 			} else{
@@ -360,6 +360,7 @@ Programa BISON para el Manejo de Sintaxis
 		temp = static_cast<Cuadruplos*>(stack_pop(&PiladeSaltosCuad)->ptr);
 		temp->temporal = contadorCuad+1;
 	}
+
 	
 %}
 
@@ -480,7 +481,7 @@ main(int argc, char* argv[]) {
         do {
             yyparse();
         } while (!feof(yyin));
-        
+
         //debugList(dirProcsInit);
 		imprimeCuad(cuadruplo);
 		
