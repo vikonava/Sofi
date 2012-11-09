@@ -161,6 +161,7 @@
     #include "estructura.c"
 	#include "cuadruplos.c"
 	#include "stack.c"
+	#include "stackConstantes.c"
 	
     using namespace std;
     
@@ -194,7 +195,8 @@
 	Stack *PiladeSaltos; // Creamos la pila Saltos ints de linea de cuadruplos
     Stack *PiladeSaltosCuad; // Creamos la pila de Saltos que almacena cuadruplos
 	Stack *PiladeTipos; //Creamos la pila de los tipos para checar la semantica
-    Stack *PilaEjecucion; // Se guarda los procedimientos en los que estamos 
+    Stack *PilaEjecucion; // Se guarda los procedimientos en los que estamos
+	StackConstantes *PilaConstantes;
 	
 	bool exitoso;
 	char *variable_type; // Tipo de la ultima variable conocida
@@ -292,28 +294,40 @@
         
 	}
 	
-	void meterConstanteAPilaOperandos(char* tipo){
+	void meterConstanteAPilaOperandos(char* tipo, char* constante){
 		int *direccion = (int *)malloc(sizeof(int));
 		
 		if(strcmp(tipo, (char *) "numero") == 0){
 			*direccion = alloc_virtual_address((char *) "numero", (char *) "constante");
 			stack_push(&PilaOperandos, direccion, 2);
 			stack_push(&PiladeTipos, (char *) "numero", 1);
+			int *cons = (int *)malloc(sizeof(int));
+			*cons = atoi(constante);
+			stackC_push(&PilaConstantes, cons, *direccion, 2);
 		}
 		if(strcmp(tipo, (char *) "decimal") == 0){
 			*direccion = alloc_virtual_address((char *) "decimal", (char *) "constante");
 			stack_push(&PilaOperandos, direccion, 2);
 			stack_push(&PiladeTipos, (char *) "decimal", 1);
+			float *cons = (float *)malloc(sizeof(float));
+			*cons = atof(constante);
+			stackC_push(&PilaConstantes, cons, *direccion, 3);
 		}
 		if(strcmp(tipo, (char *) "caracter") == 0){
 			*direccion = alloc_virtual_address((char *) "caracter", (char *) "constante");
 			stack_push(&PilaOperandos, direccion, 2);
-			stack_push(&PiladeTipos, (char *) "caracter", 1);
+			stack_push(&PiladeTipos, (char *) "caracter", 0);
+			char *cons = (char *)malloc(sizeof(char));
+			cons = constante;
+			stackC_push(&PilaConstantes, cons, *direccion, 0);
 		}
 		if(strcmp(tipo, (char *) "texto") == 0){
 			*direccion = alloc_virtual_address((char *) "texto", (char *) "constante");
 			stack_push(&PilaOperandos, direccion, 2);
 			stack_push(&PiladeTipos, (char *) "texto ", 1);
+			char *cons = (char *)malloc(sizeof(char));
+			cons = constante;
+			stackC_push(&PilaConstantes, cons, *direccion, 3);
 		}
 
 		
@@ -341,6 +355,7 @@
 		operadorInt = atoi(operador);
 
 		tipo1 = static_cast<char*>(PiladeTipos->ptr);
+        
         if (PiladeTipos->next != NULL) {
             tipo2 = static_cast<char*>(PiladeTipos->next->ptr);
         
@@ -384,9 +399,6 @@
 				stack_pop(&PiladeTipos);
 				operando12 = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
 				operando11 = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
-				
-				printf("%s %i\n", tipo1, operando11);
-				printf("%s %i\n", tipo2, operando12);
 				addCuad(&cuadruplo, 120, operando12, -1, operando11);
 				contadorCuad++;
 			} else{
@@ -460,7 +472,6 @@
 	}
 
 	void funcionParaUno() {
-		printf("vikopau");
 		int *cont = (int *)malloc(sizeof(int));
 		*cont = contadorCuad;
 		stack_push(&PiladeSaltos, cont, 2);
@@ -505,11 +516,11 @@
 		Cuadruplos *temp;
 
 		retorno = *static_cast<int*>(stack_pop(&PiladeSaltos)->ptr);
-		addCuad(&cuadruplo, 130, -1, -1, retorno);
+		addCuad(&cuadruplo, 130, -1, -1, retorno+1);
 		contadorCuad++;
 		temp = static_cast<Cuadruplos*>(stack_pop(&PiladeSaltosCuad)->ptr);
 		retorno = *static_cast<int*>(stack_pop(&PiladeSaltos)->ptr);
-		temp->temporal = retorno;
+		temp->temporal = retorno+1;
 		temp = static_cast<Cuadruplos*>(stack_pop(&PiladeSaltosCuad)->ptr);
 		temp->temporal = contadorCuad+1;
 	}
@@ -536,12 +547,12 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 371 "sintaxis.y"
+#line 382 "sintaxis.y"
 {
     char *str;
 }
 /* Line 193 of yacc.c.  */
-#line 545 "sintaxis.tab.c"
+#line 556 "sintaxis.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -554,7 +565,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 558 "sintaxis.tab.c"
+#line 569 "sintaxis.tab.c"
 
 #ifdef short
 # undef short
@@ -879,18 +890,18 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   380,   380,   380,   380,   380,   381,   382,   383,   384,
-     386,   386,   387,   388,   390,   390,   390,   390,   390,   392,
-     393,   394,   396,   396,   396,   396,   396,   396,   398,   398,
-     398,   400,   400,   401,   401,   402,   404,   405,   406,   407,
-     409,   411,   411,   411,   413,   413,   413,   413,   415,   416,
-     417,   419,   420,   421,   422,   423,   425,   425,   426,   427,
-     428,   428,   429,   429,   430,   430,   431,   431,   433,   433,
-     434,   434,   434,   435,   435,   435,   436,   438,   439,   439,
-     439,   440,   440,   440,   441,   443,   443,   444,   444,   444,
-     445,   445,   445,   446,   448,   448,   449,   450,   450,   451,
-     453,   453,   453,   453,   453,   453,   454,   456,   456,   457,
-     458,   459,   460,   461,   462
+       0,   391,   391,   391,   391,   391,   392,   393,   394,   395,
+     397,   397,   398,   399,   401,   401,   401,   401,   401,   403,
+     404,   405,   407,   407,   407,   407,   407,   407,   409,   409,
+     409,   411,   411,   412,   412,   413,   415,   416,   417,   418,
+     420,   422,   422,   422,   424,   424,   424,   424,   426,   427,
+     428,   430,   431,   432,   433,   434,   436,   436,   437,   438,
+     439,   439,   440,   440,   441,   441,   442,   442,   444,   444,
+     445,   445,   445,   446,   446,   446,   447,   449,   450,   450,
+     450,   451,   451,   451,   452,   454,   454,   455,   455,   455,
+     456,   456,   456,   457,   459,   459,   460,   461,   461,   462,
+     464,   464,   464,   464,   464,   464,   465,   467,   467,   468,
+     469,   470,   471,   472,   473
 };
 #endif
 
@@ -1923,293 +1934,293 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 380 "sintaxis.y"
+#line 391 "sintaxis.y"
     {variable_type = (char *)"NP"; tipo_func = (char *)"global"; ;}
     break;
 
   case 3:
-#line 380 "sintaxis.y"
+#line 391 "sintaxis.y"
     { variable_name = yylval.str; last_func = variable_name; stack_push(&PilaEjecucion, variable_name, 1);;}
     break;
 
   case 4:
-#line 380 "sintaxis.y"
+#line 391 "sintaxis.y"
     { addProc(&dirProcsInit,variable_name,variable_type); ;}
     break;
 
   case 10:
-#line 386 "sintaxis.y"
+#line 397 "sintaxis.y"
     { variable_name = yylval.str; ;}
     break;
 
   case 11:
-#line 386 "sintaxis.y"
+#line 397 "sintaxis.y"
     {addLocalVariableToProc(&dirProcsInit,last_func,variable_name,variable_type,alloc_virtual_address(variable_type, tipo_func)); ;}
     break;
 
   case 14:
-#line 390 "sintaxis.y"
+#line 401 "sintaxis.y"
     { variable_type = (char *)"numero"; ;}
     break;
 
   case 15:
-#line 390 "sintaxis.y"
+#line 401 "sintaxis.y"
     { variable_type = (char *)"decimal"; ;}
     break;
 
   case 16:
-#line 390 "sintaxis.y"
+#line 401 "sintaxis.y"
     { variable_type = (char *)"caracter"; ;}
     break;
 
   case 17:
-#line 390 "sintaxis.y"
+#line 401 "sintaxis.y"
     { variable_type = (char *)"texto"; ;}
     break;
 
   case 18:
-#line 390 "sintaxis.y"
+#line 401 "sintaxis.y"
     { variable_type = (char *)"booleano"; ;}
     break;
 
   case 28:
-#line 398 "sintaxis.y"
+#line 409 "sintaxis.y"
     {meterAPilaOperandos(dirProcsInit, yylval.str, last_func);;}
     break;
 
   case 29:
-#line 398 "sintaxis.y"
+#line 409 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "120", 1);;}
     break;
 
   case 30:
-#line 398 "sintaxis.y"
+#line 409 "sintaxis.y"
     {funcionAsignacion();;}
     break;
 
   case 31:
-#line 400 "sintaxis.y"
+#line 411 "sintaxis.y"
     {funcionIfUno();;}
     break;
 
   case 32:
-#line 400 "sintaxis.y"
+#line 411 "sintaxis.y"
     {funcionIfTres();;}
     break;
 
   case 33:
-#line 401 "sintaxis.y"
+#line 412 "sintaxis.y"
     {funcionIfDos();;}
     break;
 
   case 41:
-#line 411 "sintaxis.y"
+#line 422 "sintaxis.y"
     {funcionWhileUno();;}
     break;
 
   case 42:
-#line 411 "sintaxis.y"
+#line 422 "sintaxis.y"
     {funcionWhileDos();;}
     break;
 
   case 43:
-#line 411 "sintaxis.y"
+#line 422 "sintaxis.y"
     {funcionWhileTres();;}
     break;
 
   case 44:
-#line 413 "sintaxis.y"
+#line 424 "sintaxis.y"
     { funcionParaUno(); ;}
     break;
 
   case 45:
-#line 413 "sintaxis.y"
+#line 424 "sintaxis.y"
     { funcionParaDos(); ;}
     break;
 
   case 46:
-#line 413 "sintaxis.y"
+#line 424 "sintaxis.y"
     { funcionParaTres(); ;}
     break;
 
   case 47:
-#line 413 "sintaxis.y"
+#line 424 "sintaxis.y"
     { funcionParaCuatro(); ;}
     break;
 
   case 56:
-#line 425 "sintaxis.y"
+#line 436 "sintaxis.y"
     {funcionOperaciones((char*)"80"); funcionOperaciones((char*)"90"); funcionOperaciones((char*)"100"); funcionOperaciones((char*)"110");;}
     break;
 
   case 58:
-#line 426 "sintaxis.y"
+#line 437 "sintaxis.y"
     {funcionOperaciones((char*)"80"); funcionOperaciones((char*)"90"); funcionOperaciones((char*)"100"); funcionOperaciones((char*)"110");;}
     break;
 
   case 60:
-#line 428 "sintaxis.y"
+#line 439 "sintaxis.y"
     {funcionOperaciones((char*)"80");;}
     break;
 
   case 61:
-#line 428 "sintaxis.y"
+#line 439 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "80", 1);;}
     break;
 
   case 62:
-#line 429 "sintaxis.y"
+#line 440 "sintaxis.y"
     {funcionOperaciones((char*)"90");;}
     break;
 
   case 63:
-#line 429 "sintaxis.y"
+#line 440 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "90", 1);;}
     break;
 
   case 64:
-#line 430 "sintaxis.y"
+#line 441 "sintaxis.y"
     {funcionOperaciones((char*)"100");;}
     break;
 
   case 65:
-#line 430 "sintaxis.y"
+#line 441 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "100", 1);;}
     break;
 
   case 66:
-#line 431 "sintaxis.y"
+#line 442 "sintaxis.y"
     {funcionOperaciones((char*)"110");;}
     break;
 
   case 67:
-#line 431 "sintaxis.y"
+#line 442 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "110", 1);;}
     break;
 
   case 68:
-#line 433 "sintaxis.y"
+#line 444 "sintaxis.y"
     {funcionOperaciones((char*)"60"); funcionOperaciones((char*)"70");;}
     break;
 
   case 70:
-#line 434 "sintaxis.y"
+#line 445 "sintaxis.y"
     {funcionOperaciones((char*)"60");;}
     break;
 
   case 71:
-#line 434 "sintaxis.y"
+#line 445 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "60", 1);;}
     break;
 
   case 73:
-#line 435 "sintaxis.y"
+#line 446 "sintaxis.y"
     {funcionOperaciones((char*)"70");;}
     break;
 
   case 74:
-#line 435 "sintaxis.y"
+#line 446 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "70", 1);;}
     break;
 
   case 77:
-#line 438 "sintaxis.y"
+#line 449 "sintaxis.y"
     {funcionOperaciones((char*)"10"); funcionOperaciones((char*)"20");;}
     break;
 
   case 78:
-#line 439 "sintaxis.y"
+#line 450 "sintaxis.y"
     {funcionOperaciones((char*)"10");;}
     break;
 
   case 79:
-#line 439 "sintaxis.y"
+#line 450 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "10", 1);;}
     break;
 
   case 81:
-#line 440 "sintaxis.y"
+#line 451 "sintaxis.y"
     {funcionOperaciones((char *)"20");;}
     break;
 
   case 82:
-#line 440 "sintaxis.y"
+#line 451 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "20", 1);;}
     break;
 
   case 85:
-#line 443 "sintaxis.y"
+#line 454 "sintaxis.y"
     {funcionOperaciones((char*)"30"); funcionOperaciones((char*)"40");;}
     break;
 
   case 87:
-#line 444 "sintaxis.y"
+#line 455 "sintaxis.y"
     {funcionOperaciones((char*)"30");;}
     break;
 
   case 88:
-#line 444 "sintaxis.y"
+#line 455 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "30", 1);;}
     break;
 
   case 90:
-#line 445 "sintaxis.y"
+#line 456 "sintaxis.y"
     {funcionOperaciones((char*)"40");;}
     break;
 
   case 91:
-#line 445 "sintaxis.y"
+#line 456 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "40", 1);;}
     break;
 
   case 94:
-#line 448 "sintaxis.y"
+#line 459 "sintaxis.y"
     {meterFondoFalso();;}
     break;
 
   case 95:
-#line 448 "sintaxis.y"
+#line 459 "sintaxis.y"
     {sacaFondoFalso();;}
     break;
 
   case 97:
-#line 450 "sintaxis.y"
+#line 461 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "10", 1);;}
     break;
 
   case 98:
-#line 450 "sintaxis.y"
+#line 461 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "20", 1);;}
     break;
 
   case 100:
-#line 453 "sintaxis.y"
-    {meterConstanteAPilaOperandos((char *)"numero");;}
+#line 464 "sintaxis.y"
+    {meterConstanteAPilaOperandos((char *)"numero", yyval.str);;}
     break;
 
   case 101:
-#line 453 "sintaxis.y"
-    {meterConstanteAPilaOperandos((char *)"decimal");;}
+#line 464 "sintaxis.y"
+    {meterConstanteAPilaOperandos((char *)"decimal", yylval.str);;}
     break;
 
   case 102:
-#line 453 "sintaxis.y"
-    {meterConstanteAPilaOperandos((char *)"texto");;}
+#line 464 "sintaxis.y"
+    {meterConstanteAPilaOperandos((char *)"texto", yyval.str);;}
     break;
 
   case 103:
-#line 453 "sintaxis.y"
-    {meterConstanteAPilaOperandos((char *)"caracter");;}
+#line 464 "sintaxis.y"
+    {meterConstanteAPilaOperandos((char *)"caracter", yyval.str);;}
     break;
 
   case 107:
-#line 456 "sintaxis.y"
+#line 467 "sintaxis.y"
     {meterAPilaOperandos(dirProcsInit, yylval.str, last_func);;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 2213 "sintaxis.tab.c"
+#line 2224 "sintaxis.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2423,7 +2434,7 @@ yyreturn:
 }
 
 
-#line 464 "sintaxis.y"
+#line 475 "sintaxis.y"
 
 
 void yyerror(const char *s)  /* Llamada por yyparse ante un error */
@@ -2448,13 +2459,9 @@ main(int argc, char* argv[]) {
         } while (!feof(yyin));
         
         //debugList(dirProcsInit);
+		imprimeListaConstantes(PilaConstantes);
+		printf("#\n");
 		imprimeCuad(cuadruplo);
-		
-		/*while(PilaOperandos != NULL){
-			printf("holaaa");
-			printf("%i\n",*static_cast<int*>(stack_pop(&PilaOperandos)->ptr));
-			
-		}*/
 		
         deallocSemanticCube(&semanticCube);
         deallocProcDir(&dirProcsInit);

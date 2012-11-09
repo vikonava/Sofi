@@ -27,7 +27,6 @@ Cuadruplos* addCuad(Cuadruplos **list, int operador, int dirOp1, int dirOp2, int
 	cuad = *list;
 	Cuadruplos *cuad_tmp = (struct _cuadruplos *)malloc(sizeof(struct _cuadruplos));
 	
-	
 	cuad_tmp->operador = operador;
 	cuad_tmp->dirOperando1 = dirOp1;
 	cuad_tmp->dirOperando2 = dirOp2;

@@ -45,7 +45,7 @@ Programa BISON para el Manejo de Sintaxis
 	Stack *PiladeSaltos; // Creamos la pila Saltos ints de linea de cuadruplos
     Stack *PiladeSaltosCuad; // Creamos la pila de Saltos que almacena cuadruplos
 	Stack *PiladeTipos; //Creamos la pila de los tipos para checar la semantica
-    Stack *PilaEjecucion; // Se guarda los procedimientos en los que estamos 
+    Stack *PilaEjecucion; // Se guarda los procedimientos en los que estamos
 	StackConstantes *PilaConstantes;
 	
 	bool exitoso;
@@ -154,7 +154,6 @@ Programa BISON para el Manejo de Sintaxis
 			int *cons = (int *)malloc(sizeof(int));
 			*cons = atoi(constante);
 			stackC_push(&PilaConstantes, cons, *direccion, 2);
-			
 		}
 		if(strcmp(tipo, (char *) "decimal") == 0){
 			*direccion = alloc_virtual_address((char *) "decimal", (char *) "constante");
@@ -170,7 +169,7 @@ Programa BISON para el Manejo de Sintaxis
 			stack_push(&PiladeTipos, (char *) "caracter", 0);
 			char *cons = (char *)malloc(sizeof(char));
 			cons = constante;
-			stackC_push(&PilaConstantes, cons, *direccion, 0); 
+			stackC_push(&PilaConstantes, cons, *direccion, 0);
 		}
 		if(strcmp(tipo, (char *) "texto") == 0){
 			*direccion = alloc_virtual_address((char *) "texto", (char *) "constante");
@@ -206,6 +205,7 @@ Programa BISON para el Manejo de Sintaxis
 		operadorInt = atoi(operador);
 
 		tipo1 = static_cast<char*>(PiladeTipos->ptr);
+        
         if (PiladeTipos->next != NULL) {
             tipo2 = static_cast<char*>(PiladeTipos->next->ptr);
         
@@ -249,7 +249,6 @@ Programa BISON para el Manejo de Sintaxis
 				stack_pop(&PiladeTipos);
 				operando12 = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
 				operando11 = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
-				
 				addCuad(&cuadruplo, 120, operando12, -1, operando11);
 				contadorCuad++;
 			} else{
@@ -500,7 +499,6 @@ main(int argc, char* argv[]) {
 		imprimeListaConstantes(PilaConstantes);
 		printf("#\n");
 		imprimeCuad(cuadruplo);
-		
 		
         deallocSemanticCube(&semanticCube);
         deallocProcDir(&dirProcsInit);
