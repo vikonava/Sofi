@@ -54,7 +54,7 @@ void imprimeCuad(Cuadruplos *cuadruplo) {
 	
 	
 	while(cuad != NULL) {
-		printf("%d.- %d %d %d %d\n", contador, cuad->operador, cuad->dirOperando1, cuad->dirOperando2, cuad->temporal);
+		printf("%d,%d,%d,%d\n", cuad->operador, cuad->dirOperando1, cuad->dirOperando2, cuad->temporal);
 		contador++;
 		cuad = cuad->next;
 	}

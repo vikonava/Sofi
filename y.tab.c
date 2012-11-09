@@ -2448,12 +2448,6 @@ main(int argc, char* argv[]) {
         //debugList(dirProcsInit);
 		imprimeCuad(cuadruplo);
 		
-		/*while(PilaOperandos != NULL){
-			printf("holaaa");
-			printf("%i\n",*static_cast<int*>(stack_pop(&PilaOperandos)->ptr));
-			
-		}*/
-		
         deallocSemanticCube(&semanticCube);
         deallocProcDir(&dirProcsInit);
 
