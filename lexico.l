@@ -43,8 +43,8 @@ falso {return FALSE;}
 [a-zA-Z][a-zA-Z]* { yylval.str = strdup(yytext); return ID;}
 [0-9][0-9]* {yylval.str = strdup(yytext); return CTENUM;}
 [0-9][0-9]*\.[0-9][0-9]* {yylval.str = strdup(yytext); return CTEDEC;}
-\"[^\"]*\" {return CTEX;}
-\'[a-zA-Z]\' {return CCAR;}
+\"[^\"]*\" {yylval.str = strdup(yytext); return CTEX;}
+\'[a-zA-Z]\' {yylval.str = strdup(yytext); return CCAR;}
 "," {return COMA;}
 ";" {return PCOMA;}
 "(" {return ABREPA;}

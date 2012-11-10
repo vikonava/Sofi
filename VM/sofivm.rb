@@ -65,7 +65,15 @@ def loadCuadruplos
             case part
             when 0
                 temp = line.strip.split(",")
-                @virtualMemory[temp[0].to_i] = temp[1].to_i
+                virtualAddress = temp[0].to_i
+                @virtualMemory[virtualAddress] = temp[1].gsub(/\r\n?/,"").gsub(/"/, "");
+                # En caso de que haya comas en el string
+                for i in 2..temp.length-1
+                    @virtualMemory[virtualAddress] += "," + temp[i].gsub(/\r\n?/,"").gsub(/"/, "");
+                end
+                # En caso de que sea numero o flotante
+                @virtualMemory[virtualAddress] = temp[1].to_i if (virtualAddress >= GLOBAL_NUMBER && virtualAddress <= GLOBAL_NUMBER+VAR_SPACE-1) || (virtualAddress >= LOCAL_NUMBER && virtualAddress <= LOCAL_NUMBER+VAR_SPACE-1) || (virtualAddress >= TEMP_NUMBER && virtualAddress <= TEMP_NUMBER+VAR_SPACE-1)
+                @virtualMemory[virtualAddress] = temp[1].to_f if (virtualAddress >= GLOBAL_DECIMAL && virtualAddress <= GLOBAL_DECIMAL+VAR_SPACE-1) || (virtualAddress >= LOCAL_DECIMAL && virtualAddress <= LOCAL_DECIMAL+VAR_SPACE-1) || (virtualAddress >= TEMP_DECIMAL && virtualAddress <= TEMP_DECIMAL+VAR_SPACE-1)
             when 1
                 @cuadruplos[counter] = Cuadruplo.new(line.strip)
                 counter += 1
@@ -121,15 +129,18 @@ if !ARGV.empty? # Si pasa el parametro del archivo a cargar
             when 170 # ERA
             when 180 # Return
             when 190 # Print
-                puts @virtualMemory[cuadruplo.result]
+                print @virtualMemory[cuadruplo.result].to_s
+                STDOUT.flush
             when 200 # Read
-                @virtualMemory[cuadruplo.result] = STDIN.gets
+                @virtualMemory[cuadruplo.result] = STDIN.gets.strip
                 if (cuadruplo.result >= GLOBAL_NUMBER && cuadruplo.result <= GLOBAL_NUMBER+VAR_SPACE-1) || (cuadruplo.result >= LOCAL_NUMBER && cuadruplo.result <= LOCAL_NUMBER+VAR_SPACE-1) || (cuadruplo.result >= TEMP_NUMBER && cuadruplo.result <= TEMP_NUMBER+VAR_SPACE-1)
                     @virtualMemory[cuadruplo.result] = Integer(@virtualMemory[cuadruplo.result])
                 end
                 if (cuadruplo.result >= GLOBAL_DECIMAL && cuadruplo.result <= GLOBAL_DECIMAL+VAR_SPACE-1) || (cuadruplo.result >= LOCAL_DECIMAL && cuadruplo.result <= LOCAL_DECIMAL+VAR_SPACE-1) || (cuadruplo.result >= TEMP_DECIMAL && cuadruplo.result <= TEMP_DECIMAL+VAR_SPACE-1)
                     @virtualMemory[cuadruplo.result] = Float(@virtualMemory[cuadruplo.result])
                 end
+            when 210 # Print New Line
+                puts ""
             else
                 puts "UNRecog: "+cuadruplo.opId.to_s
         end
@@ -137,6 +148,7 @@ if !ARGV.empty? # Si pasa el parametro del archivo a cargar
         @apuntador += 1; # Incrementa apuntador
     end
 
+    puts ""
     puts "\nMemoria Virtual Final:\n"+@virtualMemory.to_s
 else
     puts "Debes poner el argumento del codigo objeto a ejecutar."

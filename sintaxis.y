@@ -144,7 +144,7 @@ Programa BISON para el Manejo de Sintaxis
         
 	}
 	
-	void meterConstanteAPilaOperandos(char* tipo, char* constante){
+	void meterConstanteAPilaOperandos(char* tipo, char *constante){
 		int *direccion = (int *)malloc(sizeof(int));
 		
 		if(strcmp(tipo, (char *) "numero") == 0){
@@ -172,12 +172,12 @@ Programa BISON para el Manejo de Sintaxis
 			stackC_push(&PilaConstantes, cons, *direccion, 0);
 		}
 		if(strcmp(tipo, (char *) "texto") == 0){
-			*direccion = alloc_virtual_address((char *) "texto", (char *) "constante");
+			*direccion = alloc_virtual_address((char *)"texto",(char *) "constante");
 			stack_push(&PilaOperandos, direccion, 2);
-			stack_push(&PiladeTipos, (char *) "texto ", 1);
-			char *cons = (char *)malloc(sizeof(char));
+			stack_push(&PiladeTipos, (char *)"texto", 1);
+			char *cons = (char *)malloc(sizeof(char *));
 			cons = constante;
-			stackC_push(&PilaConstantes, cons, *direccion, 3);
+			stackC_push(&PilaConstantes, cons, *direccion, 1);
 		}
 
 		
@@ -379,9 +379,14 @@ Programa BISON para el Manejo de Sintaxis
         addCuad(&cuadruplo, 200, -1, -1, *static_cast<int*>(stack_pop(&PilaOperandos)->ptr));
         contadorCuad++;
     }
-    
+
     void funcionEscritura() {
         addCuad(&cuadruplo, 190, -1, -1, *static_cast<int*>(stack_pop(&PilaOperandos)->ptr));
+        contadorCuad++;
+    }
+    
+    void funcionEscrituraFin() {
+        addCuad(&cuadruplo, 210, -1, -1, -1);
         contadorCuad++;
     }
 	
@@ -422,7 +427,7 @@ condicion: SI ABREPA expresion CIERRAPA {funcionIfUno();} REALIZA bloque1 condic
 condicion1: SINO {funcionIfDos();} bloque1;
 condicion1: ;
 
-escritura: IMPRIME ABREPA escritura1 CIERRAPA PCOMA;
+escritura: IMPRIME ABREPA escritura1 CIERRAPA { funcionEscrituraFin(); } PCOMA;
 escritura1: expresion { funcionEscritura(); } escritura2;
 escritura2: COMA escritura1;
 escritura2: ;

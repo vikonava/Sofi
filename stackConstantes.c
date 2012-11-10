@@ -50,9 +50,18 @@ StackConstantes *temp;
 	temp = head;
 	
 	while (temp != NULL) {
+		if(temp->ptrType == 0){
+		fprintf(*file, "%i,%c\n", temp->direccionMemoria,*static_cast<char*>(temp->ptr));
+		}
+		if(temp->ptrType == 1){
+		fprintf(*file, "%i,%s\n", temp->direccionMemoria,static_cast<char*>(temp->ptr));
+		}
 		if(temp->ptrType == 2){
 		fprintf(*file, "%i,%i\n", temp->direccionMemoria,*static_cast<int*>(temp->ptr));
 		}
+        if(temp->ptrType == 3) {
+		fprintf(*file, "%i,%f\n", temp->direccionMemoria,*static_cast<float*>(temp->ptr));
+        }
 		temp = temp->next;
 	}
 }
