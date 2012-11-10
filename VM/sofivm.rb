@@ -55,11 +55,22 @@ CONST_BOOL = 19000
 
 # Carga archivo de los cuadruplos en el hash
 def loadCuadruplos
+    part = 0
     counter = 1
     file = File.new(ARGV[0], "r")
     while (line = file.gets)
-        @cuadruplos[counter] = Cuadruplo.new(line.strip)
-        counter += 1
+        if line.strip == "#"
+            part += 1
+        else
+            case part
+            when 0
+                temp = line.strip.split(",")
+                @virtualMemory[temp[0].to_i] = temp[1].to_i
+            when 1
+                @cuadruplos[counter] = Cuadruplo.new(line.strip)
+                counter += 1
+            end
+        end
     end
     file.close
 end
@@ -68,16 +79,8 @@ end
 #####################
 #       Main        #
 #####################
-
-# Tabla de constantes temporal
-@virtualMemory[17000] = 0
-@virtualMemory[17001] = 8
-@virtualMemory[17002] = 1
-@virtualMemory[2001] = 1
-@virtualMemory[2002] = 1
-
 if !ARGV.empty? # Si pasa el parametro del archivo a cargar
-    loadCuadruplos # carga el archivo de cuadruplos
+    loadCuadruplos # carga el archivo de OBJ
     
     while @apuntador <= @cuadruplos.length do
         #obten cuadruplo actual
@@ -133,7 +136,7 @@ if !ARGV.empty? # Si pasa el parametro del archivo a cargar
         
         @apuntador += 1; # Incrementa apuntador
     end
-    
+
     puts "\nMemoria Virtual Final:\n"+@virtualMemory.to_s
 else
     puts "Debes poner el argumento del codigo objeto a ejecutar."

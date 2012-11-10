@@ -44,3 +44,15 @@ void imprimeListaConstantes(StackConstantes *head){
 		temp = temp->next;
 	}
 }
+
+void imprimeConstantesToFile(FILE **file, StackConstantes *head) {
+StackConstantes *temp;
+	temp = head;
+	
+	while (temp != NULL) {
+		if(temp->ptrType == 2){
+		fprintf(*file, "%i,%i\n", temp->direccionMemoria,*static_cast<int*>(temp->ptr));
+		}
+		temp = temp->next;
+	}
+}

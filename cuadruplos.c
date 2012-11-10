@@ -67,5 +67,14 @@ Cuadruplos* buscarCuad(Cuadruplos *cuadruplo, int contador){
 		temp = temp->next;	
 	}
 	return temp;
+}
 
+void imprimeCuadruploToFile(FILE **file, Cuadruplos *cuadruplo) {
+    Cuadruplos *cuad;
+	cuad = cuadruplo;
+	
+	while(cuad != NULL) {
+		fprintf(*file, "%d,%d,%d,%d\n", cuad->operador, cuad->dirOperando1, cuad->dirOperando2, cuad->temporal);
+		cuad = cuad->next;
+	}
 }

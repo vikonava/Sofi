@@ -374,6 +374,16 @@ Programa BISON para el Manejo de Sintaxis
 		temp = static_cast<Cuadruplos*>(stack_pop(&PiladeSaltosCuad)->ptr);
 		temp->temporal = contadorCuad+1;
 	}
+    
+    void funcionLectura() {
+        addCuad(&cuadruplo, 200, -1, -1, *static_cast<int*>(stack_pop(&PilaOperandos)->ptr));
+        contadorCuad++;
+    }
+    
+    void funcionEscritura() {
+        addCuad(&cuadruplo, 190, -1, -1, *static_cast<int*>(stack_pop(&PilaOperandos)->ptr));
+        contadorCuad++;
+    }
 	
 %}
 
@@ -413,11 +423,11 @@ condicion1: SINO {funcionIfDos();} bloque1;
 condicion1: ;
 
 escritura: IMPRIME ABREPA escritura1 CIERRAPA PCOMA;
-escritura1: expresion escritura2;
+escritura1: expresion { funcionEscritura(); } escritura2;
 escritura2: COMA escritura1;
 escritura2: ;
 
-lectura: LEE ABREPA variable CIERRAPA PCOMA;
+lectura: LEE ABREPA variable { funcionLectura(); } CIERRAPA PCOMA;
 
 mientras: MIENTRAS {funcionWhileUno();} ABREPA expresion CIERRAPA {funcionWhileDos();} bloque {funcionWhileTres();};
 
@@ -496,10 +506,19 @@ main(int argc, char* argv[]) {
         } while (!feof(yyin));
         
         //debugList(dirProcsInit);
-		imprimeListaConstantes(PilaConstantes);
-		printf("#\n");
-		imprimeCuad(cuadruplo);
+		//imprimeListaConstantes(PilaConstantes);
+		//printf("#\n");
+		//imprimeCuad(cuadruplo);
 		
+        strcat(argv[1],(char *)".obj");
+        /* WRITE OBJ FILE */
+        FILE *file;
+        file = fopen(argv[1],"w+"); /* apend file (add text to a file or create a file if it does not exist.*/
+        imprimeConstantesToFile(&file, PilaConstantes);
+        fprintf(file,"#\n");
+        imprimeCuadruploToFile(&file, cuadruplo);
+        fclose(file);
+        
         deallocSemanticCube(&semanticCube);
         deallocProcDir(&dirProcsInit);
 

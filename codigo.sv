@@ -1,11 +1,10 @@
 programa viko;
-    var numero c;
-    var numero b;
-    var numero a;
-    var numero d;
+    var numero i;
+    var numero j;
 realiza
-
-a = 1;
-b = 2 + 1;
-
+    para (j = 1; j menor 3; j = j + 1;) realiza
+        para (i = 0; i menor 10; i = i + 1;) realiza
+            imprime(i*j);
+        fin
+    fin
 fin
