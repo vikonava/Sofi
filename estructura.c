@@ -8,7 +8,6 @@ Estructuras de datos utilizadas en el compilador
 #include <stdio.h>
 #include <stdlib.h>
 
-
 /*************************** Tabla Parametros **************************/ 
 typedef struct Parametros {
 	int numero;

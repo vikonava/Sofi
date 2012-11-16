@@ -441,7 +441,7 @@
 			} 
 		}
 	}
-	
+    
 	// FUNCTION: funcionIfUno()
 	// RETURN: void
 	//
@@ -1078,13 +1078,13 @@ static const yytype_uint16 yyrline[] =
      592,   592,   593,   594,   596,   596,   598,   598,   598,   600,
      600,   600,   600,   602,   602,   602,   603,   603,   603,   604,
      605,   606,   607,   608,   610,   610,   611,   611,   612,   613,
-     613,   614,   617,   617,   618,   619,   620,   620,   621,   621,
-     622,   622,   623,   623,   625,   625,   626,   626,   626,   627,
-     627,   627,   628,   630,   631,   631,   631,   632,   632,   632,
-     633,   635,   635,   636,   636,   636,   637,   637,   637,   638,
-     640,   640,   641,   642,   642,   643,   645,   645,   645,   645,
-     645,   645,   646,   648,   648,   649,   650,   651,   652,   653,
-     654
+     613,   614,   616,   616,   617,   618,   619,   619,   620,   620,
+     621,   621,   622,   622,   624,   624,   625,   625,   625,   626,
+     626,   626,   627,   629,   630,   630,   630,   631,   631,   631,
+     632,   634,   634,   635,   635,   635,   636,   636,   636,   637,
+     639,   639,   640,   641,   641,   642,   644,   644,   644,   644,
+     644,   644,   645,   647,   647,   648,   649,   650,   651,   652,
+     653
 };
 #endif
 
@@ -2309,172 +2309,172 @@ yyreduce:
     break;
 
   case 72:
-#line 617 "sintaxis.y"
+#line 616 "sintaxis.y"
     {funcionOperaciones((char*)"80"); funcionOperaciones((char*)"90"); funcionOperaciones((char*)"100"); funcionOperaciones((char*)"110");}
     break;
 
   case 74:
-#line 618 "sintaxis.y"
+#line 617 "sintaxis.y"
     {funcionOperaciones((char*)"80"); funcionOperaciones((char*)"90"); funcionOperaciones((char*)"100"); funcionOperaciones((char*)"110");}
     break;
 
   case 76:
-#line 620 "sintaxis.y"
+#line 619 "sintaxis.y"
     {funcionOperaciones((char*)"80");}
     break;
 
   case 77:
-#line 620 "sintaxis.y"
+#line 619 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "80", 1);}
     break;
 
   case 78:
-#line 621 "sintaxis.y"
+#line 620 "sintaxis.y"
     {funcionOperaciones((char*)"90");}
     break;
 
   case 79:
-#line 621 "sintaxis.y"
+#line 620 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "90", 1);}
     break;
 
   case 80:
-#line 622 "sintaxis.y"
+#line 621 "sintaxis.y"
     {funcionOperaciones((char*)"100");}
     break;
 
   case 81:
-#line 622 "sintaxis.y"
+#line 621 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "100", 1);}
     break;
 
   case 82:
-#line 623 "sintaxis.y"
+#line 622 "sintaxis.y"
     {funcionOperaciones((char*)"110");}
     break;
 
   case 83:
-#line 623 "sintaxis.y"
+#line 622 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "110", 1);}
     break;
 
   case 84:
-#line 625 "sintaxis.y"
+#line 624 "sintaxis.y"
     {funcionOperaciones((char*)"60"); funcionOperaciones((char*)"70");}
     break;
 
   case 86:
-#line 626 "sintaxis.y"
+#line 625 "sintaxis.y"
     {funcionOperaciones((char*)"60");}
     break;
 
   case 87:
-#line 626 "sintaxis.y"
+#line 625 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "60", 1);}
     break;
 
   case 89:
-#line 627 "sintaxis.y"
+#line 626 "sintaxis.y"
     {funcionOperaciones((char*)"70");}
     break;
 
   case 90:
-#line 627 "sintaxis.y"
+#line 626 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "70", 1);}
     break;
 
   case 93:
-#line 630 "sintaxis.y"
+#line 629 "sintaxis.y"
     {funcionOperaciones((char*)"10"); funcionOperaciones((char*)"20");}
     break;
 
   case 94:
-#line 631 "sintaxis.y"
+#line 630 "sintaxis.y"
     {funcionOperaciones((char*)"10");}
     break;
 
   case 95:
-#line 631 "sintaxis.y"
+#line 630 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "10", 1);}
     break;
 
   case 97:
-#line 632 "sintaxis.y"
+#line 631 "sintaxis.y"
     {funcionOperaciones((char *)"20");}
     break;
 
   case 98:
-#line 632 "sintaxis.y"
+#line 631 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "20", 1);}
     break;
 
   case 101:
-#line 635 "sintaxis.y"
+#line 634 "sintaxis.y"
     {funcionOperaciones((char*)"30"); funcionOperaciones((char*)"40");}
     break;
 
   case 103:
-#line 636 "sintaxis.y"
+#line 635 "sintaxis.y"
     {funcionOperaciones((char*)"30");}
     break;
 
   case 104:
-#line 636 "sintaxis.y"
+#line 635 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "30", 1);}
     break;
 
   case 106:
-#line 637 "sintaxis.y"
+#line 636 "sintaxis.y"
     {funcionOperaciones((char*)"40");}
     break;
 
   case 107:
-#line 637 "sintaxis.y"
+#line 636 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "40", 1);}
     break;
 
   case 110:
-#line 640 "sintaxis.y"
+#line 639 "sintaxis.y"
     {meterFondoFalso();}
     break;
 
   case 111:
-#line 640 "sintaxis.y"
+#line 639 "sintaxis.y"
     {sacaFondoFalso();}
     break;
 
   case 113:
-#line 642 "sintaxis.y"
+#line 641 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "10", 1);}
     break;
 
   case 114:
-#line 642 "sintaxis.y"
+#line 641 "sintaxis.y"
     {stack_push(&PilaOperadores, (char *) "20", 1);}
     break;
 
   case 116:
-#line 645 "sintaxis.y"
+#line 644 "sintaxis.y"
     {meterConstanteAPilaOperandos((char *)"numero", yyval.str);}
     break;
 
   case 117:
-#line 645 "sintaxis.y"
+#line 644 "sintaxis.y"
     {meterConstanteAPilaOperandos((char *)"decimal", yylval.str);}
     break;
 
   case 118:
-#line 645 "sintaxis.y"
+#line 644 "sintaxis.y"
     {meterConstanteAPilaOperandos((char *)"texto", yyval.str);}
     break;
 
   case 119:
-#line 645 "sintaxis.y"
+#line 644 "sintaxis.y"
     {meterConstanteAPilaOperandos((char *)"caracter", yyval.str);}
     break;
 
   case 123:
-#line 648 "sintaxis.y"
+#line 647 "sintaxis.y"
     {meterAPilaOperandos(dirProcsInit, yylval.str, last_func);}
     break;
 
@@ -2694,7 +2694,7 @@ yyreturn:
 }
 
 
-#line 656 "sintaxis.y"
+#line 655 "sintaxis.y"
 
 
 void yyerror(const char *s)  /* Llamada por yyparse ante un error */

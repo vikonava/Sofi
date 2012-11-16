@@ -291,7 +291,7 @@ Programa BISON para el Manejo de Sintaxis
 			} 
 		}
 	}
-	
+    
 	// FUNCTION: funcionIfUno()
 	// RETURN: void
 	//
@@ -612,7 +612,6 @@ llamada2: exp { generaParametro(last_func); } llamada3;
 llamada2: ;
 llamada3: COMA { contadorK++; } llamada2;
 llamada3: ;
-
 
 expresion: cond {funcionOperaciones((char*)"80"); funcionOperaciones((char*)"90"); funcionOperaciones((char*)"100"); funcionOperaciones((char*)"110");} expresion1 ;
 expresion1: expresion2 cond {funcionOperaciones((char*)"80"); funcionOperaciones((char*)"90"); funcionOperaciones((char*)"100"); funcionOperaciones((char*)"110");};
