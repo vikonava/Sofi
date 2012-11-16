@@ -1,0 +1,2 @@
+[09-Oct-2012 19:00:38 UTC] PHP Warning:  include(_header.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/viko/public_html/sofi/index.php on line 10
+[09-Oct-2012 19:00:38 UTC] PHP Warning:  include() [<a href='function.include'>function.include</a>]: Failed opening '_header.php' for inclusion (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/viko/public_html/sofi/index.php on line 10
