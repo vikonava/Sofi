@@ -536,16 +536,12 @@ Programa BISON para el Manejo de Sintaxis
 	//
 	void generaEra(char* proc_name){
 		Node *tNode = findProc(dirProcsInit, proc_name);
-		contadorK = 1;
 		int cont;
         
 		if(tNode != NULL){
 			cont = findProcPos(dirProcsInit, proc_name);
 			addCuad(&cuadruplo, 170, cont, -1, -1);
 			contadorCuad++;
-            
-			stack_push(&PilaOperandos, &(tNode->virtual_address), 2);
-			stack_push(&PiladeTipos, tNode->returnType, 0);
 		}
         
 	}
@@ -555,19 +551,24 @@ Programa BISON para el Manejo de Sintaxis
 	//
 	// Funcion que se encarga de generar el cuadruplo de los parametros mandados
 	//
-	void generaParametro(char* proc_name){
+	void generaParametros(char* proc_name){
 		int argumento;
 		char* tipoArg;
-		
-		argumento = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
-		tipoArg = static_cast<char*>(stack_pop(&PiladeTipos)->ptr);
-
 		Node *tNode = findProc(dirProcsInit, proc_name);
+
+        for(int i = 1; i <= contadorK; i++) {
+            argumento = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
+            tipoArg = static_cast<char*>(stack_pop(&PiladeTipos)->ptr);
+
         // No checa si queda con el tipo que manda
 		//if(strcmp(tipoArg, tNode->apunta->tipo) == 0){
-          addCuad(&cuadruplo, 230, argumento, -1, contadorK);
-          contadorCuad++;
+            addCuad(&cuadruplo, 230, argumento, -1, i);
+            contadorCuad++;
 		//}
+        }
+            
+        stack_push(&PilaOperandos, &(tNode->virtual_address), 2);
+        stack_push(&PiladeTipos, tNode->returnType, 0);
 	}
     
     // FUNCTION: generaCuadPrincipal()
@@ -643,15 +644,15 @@ func1: tipo {agregaParam(static_cast<char*>(PilaEjecucion->ptr), variable_type);
 func1: ;
 func2: COMA func1;
 func2: ;
-varsfunc: vars;
+varsfunc: vars varsfunc;
 varsfunc: ;
 funcret: RET ABREPA exp { funcReturnUno(); } CIERRAPA PCOMA;
 funcret: ;
 
-llamada: ID { last_func = yylval.str; generaEra(last_func); } ABREPA llamada2 CIERRAPA { addCuad(&cuadruplo, 160, findProcPos(dirProcsInit, last_func), -1, -1); contadorCuad++; };
-llamada2: exp { generaParametro(last_func); } llamada3;
+llamada: ID { last_func = yylval.str; contadorK = 0; } ABREPA llamada2 CIERRAPA { generaEra(last_func); generaParametros(last_func); addCuad(&cuadruplo, 160, findProcPos(dirProcsInit, last_func), -1, -1); contadorCuad++; };
+llamada2: exp { contadorK++; } llamada3;
 llamada2: ;
-llamada3: COMA { contadorK++; } llamada2;
+llamada3: COMA llamada2;
 llamada3: ;
 
 expresion: cond {funcionOperaciones((char*)"80"); funcionOperaciones((char*)"90"); funcionOperaciones((char*)"100"); funcionOperaciones((char*)"110");} expresion1 ;

@@ -1,15 +1,14 @@
-func numero uno(numero a)
-  var numero b;
+func numero funcionNueva(numero a)
 realiza
-  SI (a IGUAL 0) REALIZA
-    a = 0;
+  SI (a IGUAL 1) REALIZA
+    a = 1;
   SINO
-    a = uno(a-1,3);
+    a = funcionNueva(a-1)*a;
   FIN
   regresa(a);
 fin
 
 programa viko;
 REALIZA
-  imprime(uno(5));
+  imprime(funcionNueva(5));
 FIN
