@@ -16,11 +16,28 @@ class Cuadruplo
     end
 end
 
+class Procs
+    attr_reader :name, :returnType, :params, :initCuad, :retAddress
+
+    def initialize(cuadText)
+        cuadText = cuadText.split(',');
+        @name = cuadText[0].to_s
+        @returnType = cuadText[1].to_s
+        @params = cuadText[2].to_i
+        @initCuad = cuadText[3].to_i
+        @retAddress = cuadText[4].to_i
+    end
+end
+
 #####################################
 #       Inicializa Variables        #
 #####################################
-@cuadruplos = Hash.new()
-@virtualMemory = Hash.new()
+@cuadruplos = Hash.new
+@virtualMemory = Hash.new
+@dirprocs = Array.new
+@stackProcs = Array.new
+@stackPointer = Array.new
+@stackReturn = Array.new
 @apuntador = 1; # El index de los cuadruplos inicia en el 1
 
 #####################################
@@ -72,11 +89,13 @@ def loadCuadruplos
                     @virtualMemory[virtualAddress] += "," + temp[i].gsub(/\r\n?/,"").gsub(/"/, "");
                 end
                 # En caso de que sea numero o flotante
-                @virtualMemory[virtualAddress] = temp[1].to_i if (virtualAddress >= GLOBAL_NUMBER && virtualAddress <= GLOBAL_NUMBER+VAR_SPACE-1) || (virtualAddress >= LOCAL_NUMBER && virtualAddress <= LOCAL_NUMBER+VAR_SPACE-1) || (virtualAddress >= TEMP_NUMBER && virtualAddress <= TEMP_NUMBER+VAR_SPACE-1)
-                @virtualMemory[virtualAddress] = temp[1].to_f if (virtualAddress >= GLOBAL_DECIMAL && virtualAddress <= GLOBAL_DECIMAL+VAR_SPACE-1) || (virtualAddress >= LOCAL_DECIMAL && virtualAddress <= LOCAL_DECIMAL+VAR_SPACE-1) || (virtualAddress >= TEMP_DECIMAL && virtualAddress <= TEMP_DECIMAL+VAR_SPACE-1)
+                @virtualMemory[virtualAddress] = temp[1].to_i if (virtualAddress >= GLOBAL_NUMBER && virtualAddress <= GLOBAL_NUMBER+VAR_SPACE-1) || (virtualAddress >= LOCAL_NUMBER && virtualAddress <= LOCAL_NUMBER+VAR_SPACE-1) || (virtualAddress >= TEMP_NUMBER && virtualAddress <= TEMP_NUMBER+VAR_SPACE-1) || (virtualAddress >= CONST_NUMBER && virtualAddress <= CONST_NUMBER+VAR_SPACE-1)
+                @virtualMemory[virtualAddress] = temp[1].to_f if (virtualAddress >= GLOBAL_DECIMAL && virtualAddress <= GLOBAL_DECIMAL+VAR_SPACE-1) || (virtualAddress >= LOCAL_DECIMAL && virtualAddress <= LOCAL_DECIMAL+VAR_SPACE-1) || (virtualAddress >= TEMP_DECIMAL && virtualAddress <= TEMP_DECIMAL+VAR_SPACE-1) || (virtualAddress >= CONST_DECIMAL && virtualAddress <= CONST_DECIMAL+VAR_SPACE-1)
             when 1
                 @cuadruplos[counter] = Cuadruplo.new(line.strip)
                 counter += 1
+            when 2
+                @dirprocs += [Procs.new(line.strip)]
             end
         end
     end
@@ -126,8 +145,26 @@ if !ARGV.empty? # Si pasa el parametro del archivo a cargar
             when 150 # Goto True
                 @apuntador = cuadruplo.result-1 if @virtualMemory[cuadruplo.oper1]
             when 160 # GoSub
+                @stackPointer.push(@apuntador)
+                @apuntador = @dirprocs[cuadruplo.oper1].initCuad
+                @stackReturn.push(@dirprocs[cuadruplo.oper1].retAddress)
             when 170 # ERA
-            when 180 # Return
+                # Crear Buffer de memoria y salvar los datos al stack de procs
+                memory_buffer = Hash.new
+                @virtualMemory.each { |key, value|
+                    if (key >= 5000 && key < 15000)
+                        memory_buffer[key] = value
+                        @virtualMemory.delete(key)
+                    end
+                }
+                @stackProcs.push(memory_buffer)
+            when 180 # RET From Function
+                # Devolver apuntador
+                @apuntador = @stackPointer.pop()
+                # Destruir Memoria local de funcion
+                @virtualMemory.each { |key, value| @virtualMemory.delete(key) if key >= 5000 && key < 15000 }
+                # Recupera memoria local del stack
+                @virtualMemory.merge!(@stackProcs.pop())
             when 190 # Print
                 print @virtualMemory[cuadruplo.result].to_s
                 STDOUT.flush
@@ -141,6 +178,18 @@ if !ARGV.empty? # Si pasa el parametro del archivo a cargar
                 end
             when 210 # Print New Line
                 puts ""
+            when 220 # Program Quit
+                @apuntador = @cuadruplos.length;
+            when 230 # Crea Param de una Funcion
+                funcmem = ((cuadruplo.oper1/VAR_SPACE)%5)*VAR_SPACE+LOCAL_CHAR
+                i = 0;
+                while @virtualMemory.has_key?(funcmem+i)
+                    i += 1
+                end
+                @virtualMemory[funcmem+i] = @virtualMemory[cuadruplo.oper1] if cuadruplo.oper1 < 5000 || cuadruplo.oper1 >= 15000
+                @virtualMemory[funcmem+i] = @stackProcs.last[cuadruplo.oper1]  if cuadruplo.oper1 >= 5000 && cuadruplo.oper1 < 15000
+            when 240 # RETURN
+                @virtualMemory[@stackReturn.pop()] = @virtualMemory[cuadruplo.oper1]
             else
                 puts "UNRecog: "+cuadruplo.opId.to_s
         end
@@ -148,7 +197,6 @@ if !ARGV.empty? # Si pasa el parametro del archivo a cargar
         @apuntador += 1; # Incrementa apuntador
     end
 
-    puts ""
     puts "\nMemoria Virtual Final:\n"+@virtualMemory.to_s
 else
     puts "Debes poner el argumento del codigo objeto a ejecutar."

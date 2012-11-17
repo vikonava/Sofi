@@ -22,6 +22,8 @@ var {return VAR;}
 VAR {return VAR;}
 numero {return NUMERO;}
 NUMERO {return NUMERO;}
+regresa {return RET;}
+REGRESA {return RET;}
 decimal {return DECIMAL;}
 DECIMAL {return DECIMAL;}
 texto {return TEXTO;}

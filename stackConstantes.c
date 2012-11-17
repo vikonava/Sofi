@@ -38,9 +38,18 @@ void imprimeListaConstantes(StackConstantes *head){
 	temp = head;
 	
 	while (temp != NULL) {
+		if(temp->ptrType == 0){
+		printf("%i,%c\n", temp->direccionMemoria,*static_cast<char*>(temp->ptr));
+		}
+		if(temp->ptrType == 1){
+		printf("%i,%s\n", temp->direccionMemoria,static_cast<char*>(temp->ptr));
+		}
 		if(temp->ptrType == 2){
 		printf("%i,%i\n", temp->direccionMemoria,*static_cast<int*>(temp->ptr));
 		}
+        if(temp->ptrType == 3) {
+		printf("%i,%f\n", temp->direccionMemoria,*static_cast<float*>(temp->ptr));
+        }
 		temp = temp->next;
 	}
 }

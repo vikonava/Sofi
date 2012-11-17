@@ -1,16 +1,15 @@
-programa jjj;
-var numero x;
-REALIZA
-x = 10;
-FIN
+func numero uno(numero a)
+  var numero b;
+realiza
+  SI (a IGUAL 0) REALIZA
+    a = 0;
+  SINO
+    a = uno(a-1,3);
+  FIN
+  regresa(a);
+fin
 
-func numero uno(texto i)
-realiza
-  i = "hola";
-fin
-func numero dos(numero z, texto q)
-var texto a;
-realiza
-a = "adios";
-uno(a);
-fin
+programa viko;
+REALIZA
+  imprime(uno(5));
+FIN

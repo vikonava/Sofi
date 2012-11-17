@@ -287,6 +287,7 @@ Programa BISON para el Manejo de Sintaxis
 				addCuad(&cuadruplo, 120, operando12, -1, operando11);
 				contadorCuad++;
 			} else{
+                printf("v: %i, %i\n",*static_cast<int*>(stack_pop(&PilaOperandos)->ptr),*static_cast<int*>(stack_pop(&PilaOperandos)->ptr));
 				printf("Error Semantico: Tipos incopatibles %s,%s\n",tipo1,tipo2);
 			} 
 		}
@@ -489,6 +490,19 @@ Programa BISON para el Manejo de Sintaxis
         addCuad(&cuadruplo, 210, -1, -1, -1);
         contadorCuad++;
     }
+    
+    void funcReturnUno() {
+        addCuad(&cuadruplo, 240, *static_cast<int*>(PilaOperandos->ptr), -1, -1);
+        contadorCuad++;
+    }
+    
+    void funcionFuncionesUno(char* funcion) {
+		Node *tNode = findProc(dirProcsInit, funcion);
+		
+		if(tNode != NULL){
+			tNode->virtual_address = alloc_virtual_address(tNode->returnType,(char *)"global");
+        }
+    }
 	
 	// FUNCTION: agregaParam(char* proc_name, char* tipoParam)
 	// RETURN: void
@@ -510,7 +524,6 @@ Programa BISON para el Manejo de Sintaxis
 		Node *tNode = findProc(dirProcsInit, funcion);
 		
 		if(tNode != NULL){
-			tNode->virtual_address = NULL;
 			addCuad(&cuadruplo, 180, -1, -1, -1);
 			contadorCuad++;
 		}
@@ -525,12 +538,16 @@ Programa BISON para el Manejo de Sintaxis
 		Node *tNode = findProc(dirProcsInit, proc_name);
 		contadorK = 1;
 		int cont;
-		
+        
 		if(tNode != NULL){
 			cont = findProcPos(dirProcsInit, proc_name);
 			addCuad(&cuadruplo, 170, cont, -1, -1);
 			contadorCuad++;
+            
+			stack_push(&PilaOperandos, &(tNode->virtual_address), 2);
+			stack_push(&PiladeTipos, tNode->returnType, 0);
 		}
+        
 	}
 	
 	// FUNCTION: generaParametro(char* proc_name)
@@ -543,13 +560,35 @@ Programa BISON para el Manejo de Sintaxis
 		char* tipoArg;
 		
 		argumento = *static_cast<int*>(stack_pop(&PilaOperandos)->ptr);
-		tipoArg = static_cast<char*>(PiladeTipos->ptr);
-		
+		tipoArg = static_cast<char*>(stack_pop(&PiladeTipos)->ptr);
+
 		Node *tNode = findProc(dirProcsInit, proc_name);
-		if(strcmp(tipoArg, tNode->apunta->tipo) == 0){
-			addCuad(&cuadruplo, 230, argumento, -1, contadorK);
-		}
+        // No checa si queda con el tipo que manda
+		//if(strcmp(tipoArg, tNode->apunta->tipo) == 0){
+          addCuad(&cuadruplo, 230, argumento, -1, contadorK);
+          contadorCuad++;
+		//}
 	}
+    
+    // FUNCTION: generaCuadPrincipal()
+    // RETURN: void
+    //
+    // Genera el cuadruplo de salto al main al inicio de la lista de cuadruplos
+    // y la guarda en el stack
+    //
+    void generaCuadPrincipal() {
+        Cuadruplos *temp;
+        temp = addCuad(&cuadruplo, 130, -1, -1, -1);
+        contadorCuad++;
+        stack_push(&PiladeSaltosCuad, temp, 2);
+    }
+    
+    void addSaltoAlPrincipal() {
+        Cuadruplos *temp;
+        
+		temp = static_cast<Cuadruplos*>(stack_pop(&PiladeSaltosCuad)->ptr);
+        temp->temporal = contadorCuad+1;
+    }
 	
 %}
 
@@ -559,12 +598,12 @@ Programa BISON para el Manejo de Sintaxis
     char *str;
 }
 
-%token PROGRAMA VAR NUMERO DECIMAL TEXTO CARACTER BOOLEANO TRUE FALSE IMPRIME LEE SI SINO Y O REALIZA FIN MIENTRAS PARA FUNC IGUAL MAYOR MENOR DIFERENTE ID CTENUM CTEDEC CTEX CCAR COMA PCOMA ABREPA CIERRAPA ABRECORCH CIERRACORCH SIGUAL MAS MENOS POR ENTRE
+%token PROGRAMA VAR NUMERO DECIMAL TEXTO CARACTER BOOLEANO TRUE FALSE IMPRIME LEE SI SINO Y O REALIZA FIN MIENTRAS PARA FUNC IGUAL MAYOR MENOR DIFERENTE ID CTENUM CTEDEC CTEX CCAR COMA PCOMA ABREPA CIERRAPA ABRECORCH CIERRACORCH SIGUAL MAS MENOS POR ENTRE RET
 %start program
 
 %%
 
-program: PROGRAMA {variable_type = (char *)"NP"; tipo_func = (char *)"global"; } ID { variable_name = yylval.str; last_func = variable_name; stack_push(&PilaEjecucion, variable_name, 1);} PCOMA { addProc(&dirProcsInit,variable_name,variable_type); } program1 bloque {addCuad(&cuadruplo, 220, -1, -1, -1); contadorCuad++;} program2;
+program: { generaCuadPrincipal(); } program2 PROGRAMA {variable_type = (char *)"NP"; tipo_func = (char *)"global"; } ID { variable_name = yylval.str; last_func = variable_name; stack_push(&PilaEjecucion, variable_name, 1);} PCOMA { addProc(&dirProcsInit,variable_name,variable_type); addSaltoAlPrincipal();} program1 bloque {addCuad(&cuadruplo, 220, -1, -1, -1); contadorCuad++;};
 program1: vars program1;
 program1: ;
 program2: func program2;
@@ -580,9 +619,9 @@ bloque: REALIZA bloque1 FIN;
 bloque1: estatuto bloque1;
 bloque1: ;
 
-estatuto: asignacion | condicion | escritura | lectura | mientras | para | llamada;
+estatuto: asignacion | condicion | escritura | lectura | mientras | para | llamada PCOMA;
 
-asignacion: ID {meterAPilaOperandos(dirProcsInit, yylval.str, last_func);} SIGUAL {stack_push(&PilaOperadores, (char *) "120", 1);} expresion PCOMA {funcionAsignacion();};
+asignacion: ID {meterAPilaOperandos(dirProcsInit, yylval.str, last_func); } SIGUAL {stack_push(&PilaOperadores, (char *) "120", 1);} expresion PCOMA {funcionAsignacion();};
 
 condicion: SI ABREPA expresion CIERRAPA {funcionIfUno();} REALIZA bloque1 condicion1 FIN {funcionIfTres();};
 condicion1: SINO {funcionIfDos();} bloque1;
@@ -599,15 +638,17 @@ mientras: MIENTRAS {funcionWhileUno();} ABREPA expresion CIERRAPA {funcionWhileD
 
 para: PARA ABREPA asignacion { funcionParaUno(); } expresion PCOMA { funcionParaDos(); } asignacion { funcionParaTres(); } CIERRAPA bloque { funcionParaCuatro(); } ;
 
-func: FUNC {tipo_func = (char *)"local";} tipo ID {last_func = yylval.str; stack_push(&PilaEjecucion, last_func, 1); addProc(&dirProcsInit, last_func, variable_type);} ABREPA func1 CIERRAPA varsfunc bloque {eliminaTabla(last_func);};
+func: FUNC {tipo_func = (char *)"local";} tipo ID {last_func = yylval.str; stack_push(&PilaEjecucion, last_func, 1); addProc(&dirProcsInit, last_func, variable_type);funcionFuncionesUno(last_func); } ABREPA func1 CIERRAPA varsfunc REALIZA bloque1 funcret FIN {eliminaTabla(last_func);};
 func1: tipo {agregaParam(static_cast<char*>(PilaEjecucion->ptr), variable_type);} ID {variable_name = yylval.str; addLocalVariableToProc(&dirProcsInit, static_cast<char*>(PilaEjecucion->ptr), variable_name, variable_type, alloc_virtual_address(variable_type, (char *)"local"));} func2;
 func1: ;
 func2: COMA func1;
 func2: ;
 varsfunc: vars;
 varsfunc: ;
+funcret: RET ABREPA exp { funcReturnUno(); } CIERRAPA PCOMA;
+funcret: ;
 
-llamada: ID { last_func = yylval.str ;generaEra(last_func); } ABREPA llamada2 CIERRAPA PCOMA { addCuad(&cuadruplo, 160, findProcPos(dirProcsInit, last_func), -1, -1); };
+llamada: ID { last_func = yylval.str; generaEra(last_func); } ABREPA llamada2 CIERRAPA { addCuad(&cuadruplo, 160, findProcPos(dirProcsInit, last_func), -1, -1); contadorCuad++; };
 llamada2: exp { generaParametro(last_func); } llamada3;
 llamada2: ;
 llamada3: COMA { contadorK++; } llamada2;
@@ -641,16 +682,13 @@ factor: factor1 varcte;
 factor1: MAS {stack_push(&PilaOperadores, (char *) "10", 1);} | MENOS {stack_push(&PilaOperadores, (char *) "20", 1);};
 factor1: ;
 
-varcte: CTENUM {meterConstanteAPilaOperandos((char *)"numero", yyval.str);} | CTEDEC {meterConstanteAPilaOperandos((char *)"decimal", yylval.str);} | CTEX {meterConstanteAPilaOperandos((char *)"texto", yyval.str);} | CCAR {meterConstanteAPilaOperandos((char *)"caracter", yyval.str);} | TRUE | FALSE;
+varcte: CTENUM {meterConstanteAPilaOperandos((char *)"numero", yylval.str);} | CTEDEC {meterConstanteAPilaOperandos((char *)"decimal", yylval.str);} | CTEX {meterConstanteAPilaOperandos((char *)"texto", yylval.str);} | CCAR {meterConstanteAPilaOperandos((char *)"caracter", yylval.str);} | TRUE | FALSE;
 varcte: variable ;
+varcte: llamada;
 
 variable: ID {meterAPilaOperandos(dirProcsInit, yylval.str, last_func);} variable1;
-variable1: ABREPA variable2 CIERRAPA;
 variable1: ABRECORCH expresion CIERRACORCH;
 variable1: ;
-variable2: expresion variable3;
-variable3: COMA variable2;
-variable3: ;
 
 %%
 
@@ -670,17 +708,17 @@ main(int argc, char* argv[]) {
     
         yyin = myfile;
         initSemanticCube(&semanticCube);
-    
+
         do {
             yyparse();
         } while (!feof(yyin));
         
-        printf("#\n");
-		debugList(dirProcsInit);
-		printf("#\n");
-		imprimeListaConstantes(PilaConstantes);
-		printf("#\n");
-		imprimeCuad(cuadruplo);
+        //printf("#\n");
+		//debugList(dirProcsInit);
+		//printf("#\n");
+		//imprimeListaConstantes(PilaConstantes);
+		//printf("#\n");
+		//imprimeCuad(cuadruplo);
 		
 		
         strcat(argv[1],(char *)".obj");
@@ -690,6 +728,8 @@ main(int argc, char* argv[]) {
         imprimeConstantesToFile(&file, PilaConstantes);
         fprintf(file,"#\n");
         imprimeCuadruploToFile(&file, cuadruplo);
+        fprintf(file,"#\n");
+        imprimeDirProcsToFile(&file, dirProcsInit);
         fclose(file);
         
         deallocSemanticCube(&semanticCube);

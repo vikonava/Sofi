@@ -321,16 +321,21 @@ typedef struct _node {
 // variable local.
 //
 void addProc(Node **list, char* name, char *returnType) {
-    Node *tNode;
+    Node *tNode, *temp;
+    temp = *list;
     tNode = (struct _node *)malloc(sizeof(struct _node));
     
     tNode->name = name;
     tNode->returnType = returnType;
 	tNode->apunta = NULL;
     tNode->local_variables = NULL;
-    tNode->next = *list;
-    
-    *list = tNode;
+
+    if (temp == NULL) {
+        *list = tNode;
+    } else {
+        while (temp->next != NULL) temp = temp->next;
+        temp->next = tNode;
+    }
 }
 
 // FUNCTION: findProc(lista, name)
@@ -439,6 +444,22 @@ void debugList(Node *list) {
 		
 		/*printf("%s\n", tNode->name);
 		imprime(tNode->apunta);*/
+		tNode = tNode->next;
+	}
+}
+
+// FUNCTION: imprimeCuadToFile(FILE **file, Cuadruplos *cuadruplo)
+// RETURN: void
+//
+// Imprime los cuadruplos en el formato requerido en un archivo especifico mandado como parametro
+//
+void imprimeDirProcsToFile(FILE **file, Node *list) {
+    Node *tNode = list;
+	int numParams = 0;
+	
+	while(tNode != NULL) {
+        numParams = cuentaParametros(tNode->apunta);
+		fprintf(*file, "%s,%s,%d,%d,%d\n", tNode->name, tNode->returnType, numParams, tNode->numeroCuadruplo, tNode->virtual_address);
 		tNode = tNode->next;
 	}
 }

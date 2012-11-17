@@ -78,7 +78,8 @@
      MAS = 294,
      MENOS = 295,
      POR = 296,
-     ENTRE = 297
+     ENTRE = 297,
+     RET = 298
    };
 #endif
 /* Tokens.  */
@@ -122,18 +123,19 @@
 #define MENOS 295
 #define POR 296
 #define ENTRE 297
+#define RET 298
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 558 "sintaxis.y"
+#line 589 "sintaxis.y"
 {
     char *str;
 }
 /* Line 1529 of yacc.c.  */
-#line 137 "y.tab.h"
+#line 139 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
