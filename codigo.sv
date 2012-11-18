@@ -1,6 +1,6 @@
 func numero fibonacci(numero a)
 realiza
-  SI (a IGUAL 0) REALIZA
+  SI (a MENOR 1) REALIZA
     a = 0;
   FIN
   SI (a IGUAL 1) REALIZA
@@ -15,7 +15,7 @@ fin
 programa viko;
   var numero i;
 REALIZA
-  para (i = 10; i mayor 0; i = i - 1;) REALIZA
+  para (i = 0; i menor 10; i = i + 1;) REALIZA
     imprime(fibonacci(i));
   FIN
 FIN
