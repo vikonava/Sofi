@@ -590,6 +590,16 @@ Programa BISON para el Manejo de Sintaxis
 		temp = static_cast<Cuadruplos*>(stack_pop(&PiladeSaltosCuad)->ptr);
         temp->temporal = contadorCuad+1;
     }
+    
+    void meterReturnATemp() {
+        int *temp = (int *)malloc(sizeof(int));;
+        *temp = alloc_virtual_address(static_cast<char*>(PiladeTipos->ptr),(char*)"temporal");
+
+        addCuad(&cuadruplo,120,*static_cast<int*>(stack_pop(&PilaOperandos)->ptr),-1,*temp);
+        contadorCuad++;
+        
+        stack_push(&PilaOperandos, temp, 2);
+    }
 	
 %}
 
@@ -649,7 +659,7 @@ varsfunc: ;
 funcret: RET ABREPA exp { funcReturnUno(); } CIERRAPA PCOMA;
 funcret: ;
 
-llamada: ID { last_func = yylval.str; contadorK = 0; } ABREPA llamada2 CIERRAPA { generaEra(last_func); generaParametros(last_func); addCuad(&cuadruplo, 160, findProcPos(dirProcsInit, last_func), -1, -1); contadorCuad++; };
+llamada: ID { meterFondoFalso();last_func = yylval.str; contadorK = 0; } ABREPA llamada2 CIERRAPA { generaEra(last_func); generaParametros(last_func); addCuad(&cuadruplo, 160, findProcPos(dirProcsInit, last_func), -1, -1); contadorCuad++; meterReturnATemp(); sacaFondoFalso();};
 llamada2: exp { contadorK++; } llamada3;
 llamada2: ;
 llamada3: COMA llamada2;
@@ -679,13 +689,11 @@ termino1: {funcionOperaciones((char*)"40");} ENTRE {stack_push(&PilaOperadores, 
 termino1: ;
 
 factor: ABREPA {meterFondoFalso();} expresion CIERRAPA {sacaFondoFalso();};
-factor: factor1 varcte;
-factor1: MAS {stack_push(&PilaOperadores, (char *) "10", 1);} | MENOS {stack_push(&PilaOperadores, (char *) "20", 1);};
-factor1: ;
+factor: varcte;
+factor: llamada;
 
 varcte: CTENUM {meterConstanteAPilaOperandos((char *)"numero", yylval.str);} | CTEDEC {meterConstanteAPilaOperandos((char *)"decimal", yylval.str);} | CTEX {meterConstanteAPilaOperandos((char *)"texto", yylval.str);} | CCAR {meterConstanteAPilaOperandos((char *)"caracter", yylval.str);} | TRUE | FALSE;
 varcte: variable ;
-varcte: llamada;
 
 variable: ID {meterAPilaOperandos(dirProcsInit, yylval.str, last_func);} variable1;
 variable1: ABRECORCH expresion CIERRACORCH;
