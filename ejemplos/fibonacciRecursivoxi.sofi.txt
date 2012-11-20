@@ -1,0 +1,11 @@
+FUNC numero fibonacci(numero a)REALIZA SI (a MENOR 1) REALIZA a = 0; SINO FIN SI (a MAYOR 1) REALIZA a = fibonacci(a-1) + fibonacci(a-2); SINO FIN REGRESA(a);FIN 
+			
+				PROGRAMA fibonacciRecursivo;
+				
+				VAR numero x;VAR numero i;
+				REALIZA
+				
+				IMPRIME("Numero maximo a buscar fibonacci:"); LEE(x); PARA (i = 0; i MENOR x + 1; i = i + 1;) REALIZA IMPRIME(fibonacci(i)); FIN 
+				FIN
+			
+		

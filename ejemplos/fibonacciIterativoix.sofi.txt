@@ -1,0 +1,11 @@
+FUNC numero fibonacci(numero n)VAR numero prev;VAR numero prevprev;VAR numero result;VAR numero i;REALIZA result = n; SI (n MAYOR 1) REALIZA prevprev = 0; prev = 1; result = 0; PARA (i = 0; i MENOR n - 1; i = i + 1;) REALIZA result = prev + prevprev; prevprev = prev; prev = result; FIN SINO FIN REGRESA(result);FIN 
+			
+				PROGRAMA fibonacciIterativo;
+				
+				VAR numero i;VAR numero x;
+				REALIZA
+				
+				IMPRIME("Numero maximo de Fibonacci: "); LEE(x); PARA (i = 0; i MENOR x + 1; i = i + 1;) REALIZA IMPRIME(fibonacci(i)); FIN IMPRIME(""); 
+				FIN
+			
+		

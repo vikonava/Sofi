@@ -1,0 +1,11 @@
+
+			
+				PROGRAMA factorialIterarivo;
+				
+				VAR numero x;VAR numero n;
+				REALIZA
+				
+				IMPRIME("Numero a sacar su factorial:"); LEE(n); x = 1; MIENTRAS (n MAYOR 1) REALIZA x = x * n; n = n - 1; FIN IMPRIME("Resultado: ",x); 
+				FIN
+			
+		

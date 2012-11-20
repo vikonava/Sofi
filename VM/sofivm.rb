@@ -197,7 +197,7 @@ if !ARGV.empty? # Si pasa el parametro del archivo a cargar
         @apuntador += 1; # Incrementa apuntador
     end
 
-    puts "\nMemoria Virtual Final:\n"+@virtualMemory.to_s
+    #puts "\nMemoria Virtual Final:\n"+@virtualMemory.to_s
 else
     puts "Debes poner el argumento del codigo objeto a ejecutar."
 end

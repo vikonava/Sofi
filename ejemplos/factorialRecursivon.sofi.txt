@@ -1,0 +1,11 @@
+FUNC numero factorial(numero a)REALIZA SI (a MAYOR 1) REALIZA a = factorial(a-1) * a; SINO FIN REGRESA(a);FIN 
+			
+				PROGRAMA factorialRecursivo;
+				
+				VAR numero n;
+				REALIZA
+				
+				IMPRIME("Cual numero deseas buscar su factorial: "); LEE(n); IMPRIME(factorial(n)); 
+				FIN
+			
+		
