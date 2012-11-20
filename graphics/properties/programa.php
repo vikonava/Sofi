@@ -51,21 +51,31 @@
 			<img src="../images/arrow-right.png"/>
 		</h3>
 		<div id="attributes" class="group">
-			Nombre: <input type="text" name="name" value="<?=$_GET['name']?>"/>
+			Nombre: <input type="text" name="name" value="<?=$_GET['name']?>" onKeyUp="window.parent.frames['code'].modifyAttr('<?=$_GET['type']."-".$_GET['id']?>','name',this.value);"/>
 		</div>
 		<h3 onClick="showMenu('form#variables');">
 			Crear Variable
 			<img src="../images/arrow-right.png"/>
 		</h3>
 		<form id="variables" class="group hidden">
-			<? include("_addVar.php"); ?>
+<?php
+			$_GET['whosParent'] = "ul#".$_GET['type']."-".$_GET['id']."-vars";
+			include("_addVar.php");
+?>
 		</form>
 		<h3 onClick="showMenu('form#operation');">
 			Agregar Operaci&oacute;n
 			<img src="../images/arrow-right.png"/>
 		</h3>
 		<form id="operation" class="group hidden">
-			<? include("_addOp.php"); ?>
+<?php
+			$_GET['whosParent'] = "ul#".$_GET['type']."-".$_GET['id']."-ops";
+			include("_addOp.php"); 
+?>
 		</form>
+		<p align="center">
+			<a class="btn btn-primary" onClick="window.parent.frames['code'].newFunction();">Crear Funci&oacute;n</a>
+		</p>
+		<div id="script"></div>
 	</body>
 </html>

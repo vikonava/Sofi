@@ -29,12 +29,16 @@
 		</nav>
 		<div id="main">
 			<div id="content">
-				<iframe id="code" src="code.php"></iframe>
+				<iframe id="code" src="code.php" name="code"></iframe>
 			</div>
 			<div id="side">
 				<iframe id="tools"></iframe>
 			</div>
 		</div>
+		<form id="savecode" action="download.php" method="post">
+			<input type="hidden" id="progname" name="progname" value=""/>
+			<input type="hidden" id="code" name="code" value=""/>
+		</form>
 		<div class="clear"></div>
 		<footer>
 			ITESM - Proyecto para la clase de Compiladores<br/>
